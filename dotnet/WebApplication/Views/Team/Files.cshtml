@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Files";
+}
+@model IEnumerable<File>
+
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <h1>Файловый репозиторий</h1>
+    <p>Хранилище полезных (и не очень) файлов.</p>
+    <div class="row">
+        @foreach (var file in Model)
+        {
+            <div class="col-sm-12 col-md-6">
+                <div class="container">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h4 class="card-title">@file.Name</h4>
+                            <p class="card-text">@file.Description</p>
+                            <a asp-controller="Team" asp-action="GetFile" asp-route-fileName="@file.FileName" class="btn btn-primary shadow">Скачать</a>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        }
+    </div>
+</body>
+</html>

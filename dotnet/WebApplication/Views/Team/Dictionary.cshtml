@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "Dictionary";
+}
+@model List<Dictionary>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+    <div class="container mt-3">
+        <h1>Командный справочник</h1>
+        <p>Описание...</p>
+
+        <div class="collapse collapseChanges">
+            <div class="card shadow">
+                <div class="row" style="margin: 10px">
+                    <div class="col-12">
+                        <h3>Изменить:</h3>
+                        <h6>ID:7</h6>
+                        <input type="text" class="form-control" placeholder="Наименование" id="usr">
+                        <br />
+                        <input type="text" class="form-control" placeholder="Описание" id="usr">
+                        <br />
+                        <input type="text" class="form-control" placeholder="SQL выражение" id="usr">
+                        <br />
+                        <div class="text-right">
+                            <button type="button" class="btn btn-primary">Сохранить</button>
+                            <button type="button" class="btn btn-danger btnHideChanges">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+        </div>
+
+        <input class="form-control shadow" id="dictionarySearch" type="text" placeholder="Search...">
+        <br>
+        <div class="shadow">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Наименование</th>
+                        <th>Описание</th>
+                        <th>SQL выражение</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="dictionary">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.Name</td>
+                            <td>@item.Description</td>
+                            <td>@item.SqlExpression</td>
+                            <td style="max-width:25px">
+                                <button type="button" class="btn btn-primary btn-block btnShowChanges">Изменить</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <p style="margin-bottom: 50px">Note that we start the search in tbody, to prevent filtering the table headers.</p>
+    </div>
+
+    <script>
+
+        $(document).ready(function () {
+            $("#dictionarySearch").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#dictionary tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $(".btnToggleChanges").click(function () {
+                $(".collapseChanges").collapse('toggle');
+            });
+            $(".btnShowChanges").click(function () {
+                $(".collapseChanges").collapse('show');
+            });
+            $(".btnHideChanges").click(function () {
+                $(".collapseChanges").collapse('hide');
+            });
+        });
+
+    </script>
+
+</body>
+</html>
+
