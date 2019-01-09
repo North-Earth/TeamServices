@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using WebApplication.Models;
+using WebApplication.Models.DataBase;
 using WebApplication.Models.Repositories;
 using WebApplication.Models.Services;
 
@@ -18,7 +19,7 @@ namespace WebApplication.Controllers
         public IService _service { get; }
 
         public IRepository _repository { get; }
-        public List<Employee> _employees { get; }
+        public List<Models.DataBase.User> _users { get; }
 
         #endregion
 
@@ -27,12 +28,12 @@ namespace WebApplication.Controllers
         public HomeController(IConfiguration configuration, IService service, IRepository repository)
         {
             Configuration = configuration;
-            var employeesQuery = Configuration.GetValue<string>("SqlQueries:Employees");
+            var usersQuery = Configuration.GetValue<string>("SqlQueries:Users");
 
             _service = service;
 
             _repository = repository;
-            _employees = repository.GetData<Employee>(employeesQuery).Result.ToList();
+            _users = repository.GetData<Models.DataBase.User>(usersQuery).Result.ToList();
         }
 
         #endregion
@@ -43,7 +44,7 @@ namespace WebApplication.Controllers
         {
             var ipAddress = Request.HttpContext.Connection.RemoteIpAddress;
             var machineName = _service.GetMachineName(ipAddress.ToString());
-            var currentUser = _employees.Where(e => e.MachineName == machineName).FirstOrDefault();
+            var currentUser = _users.Where(e => e.MachineName == machineName).FirstOrDefault();
             ViewData["UserName"] = currentUser?.Name;
             return View();
         }

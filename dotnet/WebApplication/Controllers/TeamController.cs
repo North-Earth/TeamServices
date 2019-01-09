@@ -16,7 +16,7 @@ namespace WebApplication.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
 
         private readonly IRepository _repository;
-        private readonly List<Models.Employee> _employees;
+       //private readonly List<Models.Employee> _employees;
         private readonly List<Models.File> _files;
         private readonly List<Models.Dictionary> _dictionary;
 
@@ -26,14 +26,14 @@ namespace WebApplication.Controllers
             IFileRepository fileRepository, IRepository repository, IService service)
         {
             Configuration = configuration;
-            var employeesQuery = Configuration.GetValue<string>("SqlQueries:Employees");
+            //var employeesQuery = Configuration.GetValue<string>("SqlQueries:Employees");
             var filesQuery = Configuration.GetValue<string>("SqlQueries:Files");
             var dictionaryQuery = Configuration.GetValue<string>("SqlQueries:Dictionary");
 
             _hostingEnvironment = hostingEnvironment;
 
             _repository = repository;
-            _employees = repository.GetData<Models.Employee>(employeesQuery).Result.ToList();
+           // _employees = repository.GetData<Models.Employee>(employeesQuery).Result.ToList();
             _files = repository.GetData<Models.File>(filesQuery).Result.ToList();
             _dictionary = repository.GetData<Models.Dictionary>(dictionaryQuery).Result.ToList();
 
@@ -61,7 +61,7 @@ namespace WebApplication.Controllers
         {
             ViewData["IP"] = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             ViewData["MachineName"] = _service.GetMachineName(Request.HttpContext.Connection.RemoteIpAddress.ToString());
-            ViewData["User"] = _employees.Where(emp => emp.MachineName == _service.GetMachineName(Request.HttpContext.Connection.RemoteIpAddress.ToString())).FirstOrDefault().Name;
+            //ViewData["User"] = _employees.Where(emp => emp.MachineName == _service.GetMachineName(Request.HttpContext.Connection.RemoteIpAddress.ToString())).FirstOrDefault().Name;
             return View();
         }
 

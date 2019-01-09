@@ -84,7 +84,7 @@ VALUES
      'Venus'
     ,'Замчалова Кристина Витальевна'
     ,'2000-03-10'
-    ,'192.168.1.180'
+    ,'192.168.1.93'
 )
 
 /*** Командный справочник ***/
@@ -102,6 +102,7 @@ CREATE TABLE TeamServices.Dictionary
 	    Id ASC
     )
 )
+GO
 
 INSERT INTO TeamServices.Dictionary
 (
@@ -129,6 +130,7 @@ SELECT
     ,dct.Description
     ,dct.SqlExpression
 FROM TeamServices.Dictionary AS dct
+GO
 
 /*** Витрина файлового репозитория ***/
 
@@ -143,6 +145,7 @@ SELECT
     ,fls.Description
     ,fls.FileName 
 FROM TeamServices.Files AS fls
+GO
 
 /*** Витрина информации о пользователях ***/
 
@@ -159,3 +162,4 @@ SELECT
     ,usr.IpAddress      
     --,usr.HardwareAddress
 FROM TeamServices.Users AS usr
+GO
