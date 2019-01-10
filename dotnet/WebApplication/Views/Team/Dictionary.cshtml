@@ -18,13 +18,38 @@
     <div class="container mt-3">
         <h1>Командный справочник</h1>
         <p>Описание...</p>
+        <button class="btn btn-primary openCreate">Добавить новую запись</button>
+
+        <hr />
+
+        <div class="collapse collapseCreate">
+            <div class="card shadow">
+                <div class="row" style="margin: 10px">
+                    <div class="col-12">
+                        <h3>Добавить новую запись:</h3>
+                        <input type="text" class="form-control" placeholder="Наименование" id="usr">
+                        <br />
+                        <input type="text" class="form-control" placeholder="Описание" id="usr">
+                        <br />
+                        <input type="text" class="form-control" placeholder="SQL выражение" id="usr">
+                        <br />
+                        <div class="text-right">
+                            <button type="button" class="btn btn-success">Сохранить</button>
+                            <button type="button" class="btn btn-danger btnHideCreate">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+        </div>
 
         <div class="collapse collapseChanges">
             <div class="card shadow">
                 <div class="row" style="margin: 10px">
                     <div class="col-12">
-                        <h3>Изменить:</h3>
+                        <h3>Изменить существующую запись:</h3>
                         <h6>ID:7</h6>
+                        <h6 style="color:orangered">Данная функция находится в разработке</h6>
                         <input type="text" class="form-control" placeholder="Наименование" id="usr">
                         <br />
                         <input type="text" class="form-control" placeholder="Описание" id="usr">
@@ -83,17 +108,27 @@
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
             });
-        });
 
-        $(document).ready(function () {
             $(".btnToggleChanges").click(function () {
                 $(".collapseChanges").collapse('toggle');
             });
+
             $(".btnShowChanges").click(function () {
                 $(".collapseChanges").collapse('show');
+                $(".collapseCreate").collapse('hide');
             });
+
             $(".btnHideChanges").click(function () {
                 $(".collapseChanges").collapse('hide');
+            });
+
+            $(".openCreate").click(function () {
+                $(".collapseCreate").collapse('show');
+                $(".collapseChanges").collapse('hide');
+            });
+
+            $(".btnHideCreate").click(function () {
+                $(".collapseCreate").collapse('hide');
             });
         });
 
