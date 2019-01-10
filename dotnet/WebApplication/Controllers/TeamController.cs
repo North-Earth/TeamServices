@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Hosting;
@@ -16,26 +17,29 @@ namespace WebApplication.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
 
         private readonly IRepository _repository;
-       //private readonly List<Models.Employee> _employees;
+
         private readonly List<Models.File> _files;
         private readonly List<Models.Dictionary> _dictionary;
+        private readonly List<Models.DataBase.Quote> _quotes;
 
         private readonly IService _service;
 
-        public TeamController(IConfiguration configuration, IHostingEnvironment hostingEnvironment,
-            IFileRepository fileRepository, IRepository repository, IService service)
+        public TeamController(IConfiguration configuration, 
+            IHostingEnvironment hostingEnvironment, IRepository repository, IService service)
         {
             Configuration = configuration;
-            //var employeesQuery = Configuration.GetValue<string>("SqlQueries:Employees");
+
             var filesQuery = Configuration.GetValue<string>("SqlQueries:Files");
             var dictionaryQuery = Configuration.GetValue<string>("SqlQueries:Dictionary");
+            var quotesQuery = Configuration.GetValue<string>("SqlQueries:Quote");
 
             _hostingEnvironment = hostingEnvironment;
 
             _repository = repository;
-           // _employees = repository.GetData<Models.Employee>(employeesQuery).Result.ToList();
+
             _files = repository.GetData<Models.File>(filesQuery).Result.ToList();
             _dictionary = repository.GetData<Models.Dictionary>(dictionaryQuery).Result.ToList();
+            _quotes = repository.GetData<Models.DataBase.Quote>(quotesQuery).Result.ToList();
 
             _service = service;
 
@@ -59,9 +63,12 @@ namespace WebApplication.Controllers
 
         public IActionResult Index()
         {
+            var quoteRnd = new Random().Next(_quotes.Count);
+
             ViewData["IP"] = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             ViewData["MachineName"] = _service.GetMachineName(Request.HttpContext.Connection.RemoteIpAddress.ToString());
-            //ViewData["User"] = _employees.Where(emp => emp.MachineName == _service.GetMachineName(Request.HttpContext.Connection.RemoteIpAddress.ToString())).FirstOrDefault().Name;
+            ViewData["Quote"] = _quotes[quoteRnd].Text;
+
             return View();
         }
 
