@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 using WebApplication.Models.Repositories;
 using WebApplication.Models.Services;
 
@@ -24,7 +25,7 @@ namespace WebApplication.Controllers
 
         private readonly IService _service;
 
-        public TeamController(IConfiguration configuration, 
+        public TeamController(IConfiguration configuration,
             IHostingEnvironment hostingEnvironment, IRepository repository, IService service)
         {
             Configuration = configuration;
@@ -74,7 +75,27 @@ namespace WebApplication.Controllers
 
         public IActionResult Dictionary()
         {
-            return View(_dictionary);
+            ViewData["Dictionary"] = _dictionary;
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Dictionary(Models.Dictionary dictionary)
+        {
+            ViewData["Dictionary"] = _dictionary;
+
+            try
+            {
+                _repository.SetData("INSERT INTO Development.TeamServices.vDictionary (Name, Description, SqlExpression) Values (@Name, @Description, @SqlExpression)", new List<Models.Dictionary> { dictionary });
+                return RedirectToAction(nameof(Dictionary));
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
+
         }
 
         public IActionResult Files()

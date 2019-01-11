@@ -36,6 +36,14 @@ namespace WebApplication.Models.Repositories
             }
         }
 
+        public async void SetData<T>(string sqlQuery, List<T> data) where T : class
+        {
+            using (IDbConnection connection = new SqlConnection(_connectionString))
+            {
+                await connection.ExecuteAsync(sqlQuery, data);
+            }
+        }
+
         #endregion
     }
 }
