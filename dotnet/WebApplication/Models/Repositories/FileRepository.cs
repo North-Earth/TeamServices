@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using WebApplication.Models.DataBase;
 
 namespace WebApplication.Models.Repositories
 {

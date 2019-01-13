@@ -19,8 +19,8 @@ namespace WebApplication.Controllers
 
         private readonly IRepository _repository;
 
-        private readonly List<Models.File> _files;
-        private readonly List<Models.Dictionary> _dictionary;
+        private readonly List<Models.DataBase.File> _files;
+        private readonly List<Models.DataBase.Dictionary> _dictionary;
         private readonly List<Models.DataBase.Quote> _quotes;
 
         private readonly IService _service;
@@ -38,8 +38,8 @@ namespace WebApplication.Controllers
 
             _repository = repository;
 
-            _files = repository.GetData<Models.File>(filesQuery).Result.ToList();
-            _dictionary = repository.GetData<Models.Dictionary>(dictionaryQuery).Result.ToList();
+            _files = repository.GetData<Models.DataBase.File>(filesQuery).Result.ToList();
+            _dictionary = repository.GetData<Models.DataBase.Dictionary>(dictionaryQuery).Result.ToList();
             _quotes = repository.GetData<Models.DataBase.Quote>(quotesQuery).Result.ToList();
 
             _service = service;
@@ -82,13 +82,13 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Dictionary(Models.Dictionary dictionary)
+        public IActionResult Dictionary(Models.DataBase.Dictionary dictionary)
         {
             ViewData["Dictionary"] = _dictionary;
 
             try
             {
-                _repository.SetData("INSERT INTO Development.TeamServices.vDictionary (Name, Description, SqlExpression) Values (@Name, @Description, @SqlExpression)", new List<Models.Dictionary> { dictionary });
+                _repository.SetData("INSERT INTO Development.TeamServices.vDictionary (Name, Description, SqlExpression) Values (@Name, @Description, @SqlExpression)", new List<Models.DataBase.Dictionary> { dictionary });
                 return RedirectToAction(nameof(Dictionary));
             }
             catch (Exception ex)

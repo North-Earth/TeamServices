@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication.Models
+namespace WebApplication.Models.DataBase
 {
     public class Dictionary
     {
