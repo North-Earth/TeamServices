@@ -22,6 +22,7 @@ namespace WebApplication.Controllers
         private readonly List<Models.DataBase.Dictionary> _dictionary;
         private readonly List<Models.DataBase.Quote> _quotes;
         private readonly List<Models.DataBase.Link> _links;
+        private readonly List<Models.DataBase.Project> _projects;
 
         private readonly IService _service;
 
@@ -34,6 +35,7 @@ namespace WebApplication.Controllers
             var dictionaryQuery = Configuration.GetValue<string>("SqlQueries:Dictionary");
             var quotesQuery = Configuration.GetValue<string>("SqlQueries:Quote");
             var linksQuery = Configuration.GetValue<string>("SqlQueries:Links");
+            var projectsQuery = Configuration.GetValue<string>("SqlQueries:Projects");
 
             _hostingEnvironment = hostingEnvironment;
 
@@ -43,6 +45,7 @@ namespace WebApplication.Controllers
             _dictionary = repository.GetData<Models.DataBase.Dictionary>(dictionaryQuery).Result.ToList();
             _quotes = repository.GetData<Models.DataBase.Quote>(quotesQuery).Result.ToList();
             _links = repository.GetData<Models.DataBase.Link>(linksQuery).Result.ToList();
+            _projects = repository.GetData<Models.DataBase.Project>(projectsQuery).Result.ToList();
 
             _service = service;
 
@@ -70,9 +73,11 @@ namespace WebApplication.Controllers
 
             ViewData["IP"] = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             ViewData["MachineName"] = _service.GetMachineName(Request.HttpContext.Connection.RemoteIpAddress.ToString());
+            //ViewData["User"] = _users?????
             Models.DataBase.Quote quote = _quotes[quoteRnd];
             ViewBag.Quote = quote;
             ViewBag.Links = _links;
+            ViewBag.Projects = _projects;
 
             return View();
         }

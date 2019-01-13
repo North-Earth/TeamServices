@@ -14,15 +14,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body @*style="background-color: LightGray;" *@>
-
-    <div class="alerts">
-
-    </div>
-    @*<h1>Hello!</h1>
-        <h3>@ViewData["IP"]</h3>
-        <h3>@ViewData["MachineName"]</h3>
-        <h3>@ViewData["User"]</h3>*@
-
     <div>
         <div class="row" style="margin-bottom:50px">
             <div class="col-sm-12 col-lg-8">
@@ -49,7 +40,7 @@
                             @{
                                 List<Link> links = ViewBag.Links;
                                 var generalLinks = links.Where(lnk => lnk.Id == 0);
-                                                                
+
                                 foreach (var link in generalLinks)
                                 {
                                     <a href="@link.Url" type="button" class="btn btn-link">@link.Name</a>
@@ -62,34 +53,35 @@
                 <br />
 
                 <div class="row">
-                    <div class="col-sm-12 col-lg-6">
+                    <div class="col-12">
                         <div class="card shadow">
-                            <img class="card-img-top" src="~/img/project_demo1.jpg" alt="Card image" style="width:100%">
                             <div class="card-body">
-                                <h4 class="card-title">Командный проект #1</h4>
-                                <p class="card-text">Описание проекта</p>
-                                <button type="button" class="btn btn-link">Link</button>
-                                <button type="button" class="btn btn-link">Link</button>
-                                <br />
-                                <a href="#" class="btn btn-primary">See Profile</a>
+                                <h3>Наши проекты</h3>
                             </div>
                         </div>
                         <br />
                     </div>
-                    <div class="col-sm-12 col-lg-6">
-                        <div class="card shadow">
-                            <img class="card-img-top" src="~/img/project_demo1.jpg" alt="Card image" style="width:100%">
-                            <div class="card-body">
-                                <h4 class="card-title">Командный проект #2</h4>
-                                <p class="card-text">Описание проекта</p>
-                                <button type="button" class="btn btn-link">Link</button>
-                                <button type="button" class="btn btn-link">Link</button>
+                    @{
+                        List<Project> projects = ViewBag.Projects;
+
+                        foreach (var project in projects)
+                        {
+                            <div class="col-sm-12 col-lg-6">
+                                <div class="card shadow">
+                                    <img class="card-img-top" src="~/img/Projects/@project.LogoPath" alt="@project.Name" style="width:100%">
+                                    <div class="card-body">
+                                        <h4 class="card-title">@project.Name</h4>
+                                        <p class="card-text">@project.Description</p>
+                                        <button type="button" class="btn btn-link">Link</button>
+                                        <button type="button" class="btn btn-link">Link</button>
+                                        <br />
+                                        <a href="#" class="btn btn-primary">See Profile</a>
+                                    </div>
+                                </div>
                                 <br />
-                                <a href="#" class="btn btn-primary">See Profile</a>
                             </div>
-                        </div>
-                        <br />
-                    </div>
+                        }
+                    }
                 </div>
                 <br />
             </div>
@@ -109,6 +101,18 @@
                             data-content=@ViewBag.Quote.Author>
                             @ViewBag.Quote.Text
                         </h5>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h5>Информация о Вас</h5>
+                        <hr />
+                        <h6>IP: @ViewData["IP"]</h6>
+                        <h6>Имя компьютера: @ViewData["MachineName"]</h6>
+                        <h6>Пользователь: @ViewData["User"]</h6>
                     </div>
                 </div>
 
@@ -146,17 +150,17 @@
                             </div>
                         </div>
                         <br />
-                        <button class="btn btn-outline-primary btn-block btnOpen" data-toggle="popover" data-placement="top" title="Popover Header" data-content="Some content inside the popover">More...</button>
+                        <button class="btn btn-outline-primary btn-block"
+                                data-toggle="popover" data-placement="top"
+                                title="Popover Header"
+                                data-content="Some content inside the popover">
+                            More...
+                        </button>
                     </div>
                 </div>
 
                 <script>
                     $(document).ready(function () {
-                        $('.btnOpen').click(function () {
-                            var danger = "";
-                            $('.alerts').html(danger);
-                        });
-
                         $('[data-toggle="popover"]').popover();
                     });
                 </script>
