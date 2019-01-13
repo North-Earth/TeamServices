@@ -21,6 +21,7 @@ namespace WebApplication.Controllers
         private readonly List<Models.DataBase.File> _files;
         private readonly List<Models.DataBase.Dictionary> _dictionary;
         private readonly List<Models.DataBase.Quote> _quotes;
+        private readonly List<Models.DataBase.Link> _links;
 
         private readonly IService _service;
 
@@ -32,6 +33,7 @@ namespace WebApplication.Controllers
             var filesQuery = Configuration.GetValue<string>("SqlQueries:Files");
             var dictionaryQuery = Configuration.GetValue<string>("SqlQueries:Dictionary");
             var quotesQuery = Configuration.GetValue<string>("SqlQueries:Quote");
+            var linksQuery = Configuration.GetValue<string>("SqlQueries:Links");
 
             _hostingEnvironment = hostingEnvironment;
 
@@ -40,6 +42,7 @@ namespace WebApplication.Controllers
             _files = repository.GetData<Models.DataBase.File>(filesQuery).Result.ToList();
             _dictionary = repository.GetData<Models.DataBase.Dictionary>(dictionaryQuery).Result.ToList();
             _quotes = repository.GetData<Models.DataBase.Quote>(quotesQuery).Result.ToList();
+            _links = repository.GetData<Models.DataBase.Link>(linksQuery).Result.ToList();
 
             _service = service;
 
@@ -67,7 +70,9 @@ namespace WebApplication.Controllers
 
             ViewData["IP"] = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             ViewData["MachineName"] = _service.GetMachineName(Request.HttpContext.Connection.RemoteIpAddress.ToString());
-            ViewData["Quote"] = _quotes[quoteRnd].Text;
+            Models.DataBase.Quote quote = _quotes[quoteRnd];
+            ViewBag.Quote = quote;
+            ViewBag.Links = _links;
 
             return View();
         }
