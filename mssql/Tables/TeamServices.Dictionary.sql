@@ -4,6 +4,7 @@ USE Development
 GO
 
 DROP TABLE IF EXISTS TeamServices.Dictionary
+GO
 
 CREATE TABLE TeamServices.Dictionary
 (

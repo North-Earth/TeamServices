@@ -4,6 +4,7 @@ USE Development
 GO
 
 DROP TABLE IF EXISTS TeamServices.Users
+GO
 
 CREATE TABLE TeamServices.Users
 (

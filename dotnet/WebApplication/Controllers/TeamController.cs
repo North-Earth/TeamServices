@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using WebApplication.Models.Repositories;
 using WebApplication.Models.Services;
 
@@ -84,11 +83,14 @@ namespace WebApplication.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Dictionary(Models.DataBase.Dictionary dictionary)
         {
+            var dictionaryInsertQuery = Configuration.GetValue<string>("SqlQueries:DictionaryInsert");
             ViewData["Dictionary"] = _dictionary;
 
             try
             {
-                _repository.SetData("INSERT INTO Development.TeamServices.vDictionary (Name, Description, SqlExpression) Values (@Name, @Description, @SqlExpression)", new List<Models.DataBase.Dictionary> { dictionary });
+                _repository.SetData(dictionaryInsertQuery
+                    , new List<Models.DataBase.Dictionary> { dictionary });
+
                 return RedirectToAction(nameof(Dictionary));
             }
             catch (Exception ex)

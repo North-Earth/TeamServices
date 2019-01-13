@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using WebApplication.Models;
 using WebApplication.Models.DataBase;
 using WebApplication.Models.Repositories;
@@ -33,7 +33,7 @@ namespace WebApplication.Controllers
             _service = service;
 
             _repository = repository;
-            _users = repository.GetData<Models.DataBase.User>(usersQuery).Result.ToList();
+            _users = repository.GetData<User>(usersQuery).Result.ToList();
         }
 
         #endregion

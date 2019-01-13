@@ -4,6 +4,7 @@ USE Development
 GO
 
 DROP TABLE IF EXISTS TeamServices.Files
+GO
 
 CREATE TABLE TeamServices.Files
 (
