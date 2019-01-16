@@ -1,6 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Dictionary";
-    var dictionary = ViewData["Dictionary"]?? new List<Dictionary>();
+    var dictionary = ViewData["Dictionary"] ?? new List<Dictionary>();
 }
 
 @model Dictionary
@@ -62,16 +62,24 @@
                     <div class="col-12">
                         <h3>Изменить существующую запись:</h3>
                         <h6>ID:0</h6>
-                        <h6 style="color:orangered">Данная функция находится в разработке</h6>
                         <input type="text" class="form-control" placeholder="Наименование" id="usr">
                         <br />
                         <input type="text" class="form-control" placeholder="Описание" id="usr">
                         <br />
                         <input type="text" class="form-control" placeholder="SQL выражение" id="usr">
-                        <br />
+                        <hr />
                         <div class="text-right">
-                            <button type="button" class="btn btn-primary">Сохранить</button>
-                            <button type="button" class="btn btn-danger btnHideChanges">Отмена</button>
+                            <div class="row">
+                                <div class="col-8">
+                                    <h6 class="text-left" style="color:orangered">
+                                        <strong>Данная функция находится в разработке и она может работать некорректно.</strong>
+                                    </h6>
+                                </div>
+                                <div class="col-4">
+                                    <button type="button" class="btn btn-primary">Сохранить</button>
+                                    <button type="button" class="btn btn-danger btnHideChanges">Отмена</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -85,7 +93,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th class="text-center">#</th>
                         <th>Наименование</th>
                         <th>Описание</th>
                         <th>SQL выражение</th>
@@ -96,7 +104,7 @@
                     @foreach (var item in dictionary as List<Dictionary>)
                     {
                         <tr>
-                            <td>@item.Id</td>
+                            <td class="text-center">@item.Id</td>
                             <td>@item.Name</td>
                             <td>@item.Description</td>
                             <td>@item.SqlExpression</td>

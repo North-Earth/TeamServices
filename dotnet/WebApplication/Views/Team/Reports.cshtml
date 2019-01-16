@@ -1,0 +1,71 @@
+﻿
+@{
+    ViewData["Title"] = "Reports";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+</head>
+<body>
+    <div class="">
+        <h1>Командный отчёт</h1>
+        <p>Отчёт переработок и отработок.</p>
+
+        <hr />
+
+        <div class="collapse collapseCreate">
+            <div class="card shadow">
+                <div class="row" style="margin: 10px">
+                    <div class="col-12">
+                        <h3>Добавить новую запись:</h3>
+
+                        <form asp-action="Reports">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            <div class="form-group">
+                                <input asp-for="Name" type="text" class="form-control" placeholder="Наименование">
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="Description" type="text" class="form-control" placeholder="Описание">
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="SqlExpression" type="text" class="form-control" placeholder="SQL выражение">
+                            </div>
+                            <hr />
+                            <div class="form-group text-right">
+                                <input type="submit" value="Добавить в справочник" class="btn btn-success" />
+                                <button type="button" class="btn btn-danger btnHideCreate">Отмена</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <br />
+        </div>
+
+        <div class="shadow">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Пользователь</th>
+                        <th>Текущий месяц</th>
+                        <th>Прошлый месяц</th>
+                        <th>Всего</th>
+                    </tr>
+                </thead>
+                <tbody id="dictionary">
+                    <tr>
+                        <td>Кукушкин Алексей Александрович</td>
+                        <td class="text-center"><text class="text-success">10</text> / <text class="text-danger">0</text></td>
+                        <td class="text-center"><text class="text-success">0</text> / <text class="text-danger">2</text></td>
+                        <td class="text-center"><text class="text-success">10</text> / <text class="text-danger">2</text></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="margin-bottom: 50px">Note that we start the search in tbody, to prevent filtering the table headers.</p>
+
+    </div>
+</body>
+</html>

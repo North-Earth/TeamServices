@@ -23,6 +23,7 @@ namespace WebApplication.Controllers
         private readonly List<Models.DataBase.Quote> _quotes;
         private readonly List<Models.DataBase.Link> _links;
         private readonly List<Models.DataBase.Project> _projects;
+        private readonly List<Models.DataBase.User> _users;
 
         private readonly IService _service;
 
@@ -36,6 +37,7 @@ namespace WebApplication.Controllers
             var quotesQuery = Configuration.GetValue<string>("SqlQueries:Quote");
             var linksQuery = Configuration.GetValue<string>("SqlQueries:Links");
             var projectsQuery = Configuration.GetValue<string>("SqlQueries:Projects");
+            var usersQuery = Configuration.GetValue<string>("SqlQueries:Users");
 
             _hostingEnvironment = hostingEnvironment;
 
@@ -46,25 +48,9 @@ namespace WebApplication.Controllers
             _quotes = repository.GetData<Models.DataBase.Quote>(quotesQuery).Result.ToList();
             _links = repository.GetData<Models.DataBase.Link>(linksQuery).Result.ToList();
             _projects = repository.GetData<Models.DataBase.Project>(projectsQuery).Result.ToList();
+            _users = repository.GetData<Models.DataBase.User>(usersQuery).Result.ToList();
 
             _service = service;
-
-            /* Статические данные для демо без работы БД*/
-
-            //_employees = new List<Models.Employee>
-            //{
-            //    new Models.Employee { Name = "Новый Пользователь", IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString() }
-            //};
-            //_files = new List<Models.File>
-            //{
-            //    new Models.File { Name = "Отсутствие на рабочем месте", Description = "Заявление об отсутствии сотрудника на рабочем месте.", FileName = "Шаблон отсутствие на рабочем месте.docx" },
-            //    new Models.File { Name = "Неоплачиваемый отпуск", Description = "Заявление на неоплачиваемый отпуск", FileName = "Шаблон ежегодный оплачиваемый отпуск.docx" },
-            //    new Models.File { Name = "Оплачиваемый отпуск", Description = "Заявление на ежегодный отпуск с сохранением заработной платы.", FileName = "Шаблон неоплачиваемый отпуск.docx" }
-            //};
-            //_dictionary = new List<Models.Dictionary>
-            //{
-            //    new Models.Dictionary { Id = 0, Name = "Тестовая запись", Description = "Тестовое описание", SqlExpression = "SELECT 'Test'"}
-            //};
         }
 
         public IActionResult Index()
@@ -73,7 +59,7 @@ namespace WebApplication.Controllers
 
             ViewData["IP"] = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             ViewData["MachineName"] = _service.GetMachineName(Request.HttpContext.Connection.RemoteIpAddress.ToString());
-            //ViewData["User"] = _users?????
+            ViewData["User"] = _users.Where(usr => usr.MachineName == ViewData["MachineName"].ToString()).FirstOrDefault()?.Name;
             Models.DataBase.Quote quote = _quotes[quoteRnd];
             ViewBag.Quote = quote;
             ViewBag.Links = _links;
@@ -119,6 +105,11 @@ namespace WebApplication.Controllers
         {
             var path = Path.Combine("~/Files", fileName);
             return File(path, "application/octet-stream", fileName);
+        }
+
+        public IActionResult Reports()
+        {
+            return View();
         }
     }
 }
