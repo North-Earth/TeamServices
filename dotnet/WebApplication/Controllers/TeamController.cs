@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using WebApplication.Models.DataBase;
 using WebApplication.Models.Repositories;
 using WebApplication.Models.Services;
+using WebApplication.Models.Views;
 
 namespace WebApplication.Controllers
 {
@@ -24,6 +26,7 @@ namespace WebApplication.Controllers
         private readonly List<Models.DataBase.Link> _links;
         private readonly List<Models.DataBase.Project> _projects;
         private readonly List<Models.DataBase.User> _users;
+        private readonly List<Models.DataBase.OverTimeWorkReport> _overTimeWorkReports;
 
         private readonly IService _service;
 
@@ -38,6 +41,7 @@ namespace WebApplication.Controllers
             var linksQuery = Configuration.GetValue<string>("SqlQueries:Links");
             var projectsQuery = Configuration.GetValue<string>("SqlQueries:Projects");
             var usersQuery = Configuration.GetValue<string>("SqlQueries:Users");
+            var overTimeWorkReportsQuery = Configuration.GetValue<string>("SqlQueries:OverTimeWorkReports");
 
             _hostingEnvironment = hostingEnvironment;
 
@@ -49,6 +53,7 @@ namespace WebApplication.Controllers
             _links = repository.GetData<Models.DataBase.Link>(linksQuery).Result.ToList();
             _projects = repository.GetData<Models.DataBase.Project>(projectsQuery).Result.ToList();
             _users = repository.GetData<Models.DataBase.User>(usersQuery).Result.ToList();
+            _overTimeWorkReports = repository.GetData<Models.DataBase.OverTimeWorkReport>(overTimeWorkReportsQuery).Result.ToList();
 
             _service = service;
         }
@@ -108,6 +113,43 @@ namespace WebApplication.Controllers
         }
 
         public IActionResult Reports()
+        {
+            var overTimeWOrkReports = new List<OverTimeWork>();
+
+            foreach (var reportsUser in _overTimeWorkReports.GroupBy(r => r.Name))
+            {
+                var report = new OverTimeWork();
+
+                report.Name = reportsUser.Key;
+
+                foreach (var reportUser in reportsUser
+                    .Where(r => r.LoadDtm.Month == DateTime.Now.Month))
+                {
+                    if (reportUser.OverTimeHour >= 0)
+                        report.OverTime += reportUser.OverTimeHour;
+                    else if (reportUser.OverTimeHour < 0)
+                        report.TimeOff += reportUser.OverTimeHour;
+                }
+
+                foreach (var reportUser in reportsUser
+                    .Where(r => r.LoadDtm.Month == DateTime.Now.AddMonths(-1).Month))
+                {
+                    if (reportUser.OverTimeHour >= 0)
+                        report.LastOverTime += reportUser.OverTimeHour;
+                    else if (reportUser.OverTimeHour < 0)
+                        report.LastTimeOff += reportUser.OverTimeHour;
+                }
+
+                overTimeWOrkReports.Add(report);
+            }
+
+            ViewBag.OverTimeWorkReports = overTimeWOrkReports;
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Reports(Models.DataBase.OverTimeWorkReport reports)
         {
             return View();
         }
