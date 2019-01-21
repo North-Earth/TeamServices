@@ -116,6 +116,8 @@ namespace WebApplication.Controllers
         {
             var overTimeWOrkReports = new List<OverTimeWork>();
 
+            var _overTimeWorkReports = new List<OverTimeWorkReport> { new OverTimeWorkReport { Name = "Admin", LoadDtm = DateTime.Now, OverTimeHour = 12 } };
+
             foreach (var reportsUser in _overTimeWorkReports.GroupBy(r => r.Name))
             {
                 var report = new OverTimeWork();

@@ -34,8 +34,6 @@ namespace WebApplication
             });
 
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            /* Подключение к справочнику файлов в БД */
-            services.AddTransient<IFileRepository, FileRepository>(provider => new FileRepository(connectionString));
 
             /* Подключаем сервисы */
             services.AddScoped<IService, Service>();
