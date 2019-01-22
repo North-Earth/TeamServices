@@ -6,25 +6,52 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 </head>
 <body>
-    <h1>Файловый репозиторий</h1>
-    <p>Хранилище полезных (и не очень) файлов.</p>
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Командный файловый репозиторий</h1>
+        <p class="lead">
+            Хранилище полезных (и не очень) файлов.
+        </p>
+    </div>
     <div class="row">
         @foreach (var file in Model)
         {
-            <div class="col-sm-12 col-md-6">
+            <div class="col-sm-12 col-md-6 col-lg-4">
                 <div class="container">
-                    <div class="card shadow">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header">
+                            <h4 class="my-0 font-weight-normal text-center text-truncate">@file.Name</h4>
+                        </div>
                         <div class="card-body">
-                            <h4 class="card-title">@file.Name</h4>
-                            <p class="card-text">@file.Description</p>
-                            <a asp-controller="Team" asp-action="GetFile" asp-route-fileName="@file.FileName" class="btn btn-primary shadow">Скачать</a>
+                            <ul class="list-unstyled mt-3 mb-4 text-center">
+                                <li style="height:50px">@file.Description</li>
+                            </ul>
+                            <a asp-controller="Team" asp-action="GetFile" asp-route-fileName="@file.FileName"
+                               class="btn btn-lg btn-block btn-outline-primary">
+                                Скачать
+                            </a>
                         </div>
                     </div>
-                    <br />
                 </div>
             </div>
+
+            @*<div class="col-sm-12 col-md-6">
+                    <div class="container">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <h4 class="card-title">@file.Name</h4>
+                                <p class="card-text">@file.Description</p>
+                                <a asp-controller="Team" asp-action="GetFile" asp-route-fileName="@file.FileName"
+                                   class="btn btn-outline-primary shadow text-right">
+                                    Скачать
+                                </a>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                </div>*@
         }
     </div>
 </body>

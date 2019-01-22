@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication.Models.Views
 {
-    public class OverTimeWork
+    public class ViewModelOverTimeWork
     {
         public string Name { get; set; }
 

@@ -8,7 +8,7 @@ namespace WebApplication.Models.Services
 {
     public interface IDataLoader
     {
-        Task GetDataAsync<T>() where T : class;
+        Task<T> GetDataAsync<T>() where T : class;
 
         Task LoadDataAsync();
     }

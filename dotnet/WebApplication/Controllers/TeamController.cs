@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using WebApplication.Models.DataBase;
 using WebApplication.Models.Repositories;
 using WebApplication.Models.Services;
 using WebApplication.Models.Views;
@@ -114,13 +113,13 @@ namespace WebApplication.Controllers
 
         public IActionResult Reports()
         {
-            var overTimeWOrkReports = new List<OverTimeWork>();
+            var overTimeWOrkReports = new List<ViewModelOverTimeWork>();
 
-            var _overTimeWorkReports = new List<OverTimeWorkReport> { new OverTimeWorkReport { Name = "Admin", LoadDtm = DateTime.Now, OverTimeHour = 12 } };
+            var _overTimeWorkReports = new List<Models.DataBase.OverTimeWorkReport> { new Models.DataBase.OverTimeWorkReport { Name = "Admin", LoadDtm = DateTime.Now, OverTimeHour = 12 } };
 
             foreach (var reportsUser in _overTimeWorkReports.GroupBy(r => r.Name))
             {
-                var report = new OverTimeWork();
+                var report = new ViewModelOverTimeWork();
 
                 report.Name = reportsUser.Key;
 
@@ -153,6 +152,59 @@ namespace WebApplication.Controllers
         [HttpPost]
         public IActionResult Reports(Models.DataBase.OverTimeWorkReport reports)
         {
+            return View();
+        }
+
+        public IActionResult OvertimeWorkReports()
+        {
+            //Временное для тестирования.
+            var _overTimeWorkReports = new List<Models.DataBase.OverTimeWorkReport>
+            {
+                new Models.DataBase.OverTimeWorkReport
+                {
+                    Name = "Admin",
+                    LoadDtm = DateTime.Now,
+                    OverTimeHour = 12
+                }
+            };
+
+            var service = _service as Service;
+            var reports = service.ParseToOvertimeReport(_overTimeWorkReports);
+
+            ViewBag.OverTimeWorkReports = reports;
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult OvertimeWorkReports(ViewModelOverTimeWorkReport report)
+        {
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.WriteLine($"{report.Name} {report.Id} {report.Time}");
+            Console.ResetColor();
+
+            int time = report.Time;
+            if (report.Id == 2)
+            {
+                time = time * -1;
+            }
+
+            var _overTimeWorkReports = new List<Models.DataBase.OverTimeWorkReport>
+            {
+                new Models.DataBase.OverTimeWorkReport
+                {
+                    Name = report.Name,
+                    LoadDtm = DateTime.Now,
+                    OverTimeHour = time
+                }
+            };
+
+
+            var service = _service as Service;
+            var reports = service.ParseToOvertimeReport(_overTimeWorkReports);
+
+            ViewBag.OverTimeWorkReports = reports;
+
             return View();
         }
     }

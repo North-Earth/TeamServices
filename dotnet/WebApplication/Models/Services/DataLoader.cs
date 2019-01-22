@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication.Models.Repositories;
 
 namespace WebApplication.Models.Services
 {
@@ -11,8 +10,9 @@ namespace WebApplication.Models.Services
         #region Fields
 
         private readonly IConfiguration _configuration;
+        private readonly IRepository _repository;
 
-        private readonly Data _data;
+        private readonly Data _data = new Data();
 
         #endregion
 
@@ -27,14 +27,36 @@ namespace WebApplication.Models.Services
 
         #region Methods
 
-        public Task GetDataAsync<T>() where T : class
+        public async Task<T> GetDataAsync<T>() where T : class
         {
-            throw new NotImplementedException();
+            await LoadDataAsync();
+            return _data as T;
         }
 
-        public Task LoadDataAsync()
+        public async Task LoadDataAsync()
         {
-            throw new NotImplementedException();
+            var queries = _data.GetQueries(_configuration);
+
+            _data.files = _repository.GetData<Models.DataBase.File>(queries.Where(q
+                => q.Name == "Files").FirstOrDefault().Query).Result.ToList();
+
+            _data.dictionary = _repository.GetData<DataBase.Dictionary>(queries.Where(q
+                => q.Name == "Dictionary").FirstOrDefault().Query).Result.ToList();
+
+            _data.quotes = _repository.GetData<DataBase.Quote>(queries.Where(q
+                => q.Name == "Quotes").FirstOrDefault().Query).Result.ToList();
+
+            _data.links = _repository.GetData<DataBase.Link>(queries.Where(q
+                => q.Name == "Links").FirstOrDefault().Query).Result.ToList();
+
+            _data.projects = _repository.GetData<DataBase.Project>(queries.Where(q
+                => q.Name == "Projects").FirstOrDefault().Query).Result.ToList();
+
+            _data.users = _repository.GetData<DataBase.User>(queries.Where(q
+                => q.Name == "Users").FirstOrDefault().Query).Result.ToList();
+
+            _data.overTimeWorkReports = _repository.GetData<DataBase.OverTimeWorkReport>(queries.Where(q
+                => q.Name == "OverTimeWorkReports").FirstOrDefault().Query).Result.ToList();
         }
 
         #endregion
