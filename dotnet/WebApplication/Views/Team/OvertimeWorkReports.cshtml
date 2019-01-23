@@ -16,12 +16,15 @@
 
     <div class="collapse">
         <div class="card shadow">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal text-center text-truncate">Добавить новую запись</h4>
+            </div>
             <div class="container" style="margin-top:15px">
                 <form asp-action="OvertimeWorkReports" asp-controller="Team">
                     <div class="row">
                         <div class="col-12">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Описание причины" asp-for="Name">
+                                <input type="text" class="form-control" placeholder="Описание причины" asp-for="Description">
                                 <select class="custom-select" asp-for="Id">
                                     <option value="1" selected>Переработка</option>
                                     <option value="2">Недоработка</option>
@@ -44,7 +47,7 @@
     </div><br />
 
     <div class="shadow">
-        <table class="table table-bordered">
+        <table class="table table-bordered text-center">
             <thead>
                 <tr>
                     <th>Пользователь</th>

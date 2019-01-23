@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using WebApplication.Models.DataBase;
 using WebApplication.Models.Repositories;
 using WebApplication.Models.Services;
 using WebApplication.Models.Views;
@@ -19,18 +21,22 @@ namespace WebApplication.Controllers
 
         private readonly IRepository _repository;
 
+        private readonly IDataLoader _dataLoader;
+
         private readonly List<Models.DataBase.File> _files;
         private readonly List<Models.DataBase.Dictionary> _dictionary;
         private readonly List<Models.DataBase.Quote> _quotes;
         private readonly List<Models.DataBase.Link> _links;
         private readonly List<Models.DataBase.Project> _projects;
         private readonly List<Models.DataBase.User> _users;
-        private readonly List<Models.DataBase.OverTimeWorkReport> _overTimeWorkReports;
+        private readonly List<Models.DataBase.OvertimeWorkReport> _overtimeWorkReports;
+
+        private readonly User currentUser;
 
         private readonly IService _service;
 
         public TeamController(IConfiguration configuration,
-            IHostingEnvironment hostingEnvironment, IRepository repository, IService service)
+            IHostingEnvironment hostingEnvironment, IRepository repository, IService service, IDataLoader dataLoader)
         {
             Configuration = configuration;
 
@@ -40,11 +46,13 @@ namespace WebApplication.Controllers
             var linksQuery = Configuration.GetValue<string>("SqlQueries:Links");
             var projectsQuery = Configuration.GetValue<string>("SqlQueries:Projects");
             var usersQuery = Configuration.GetValue<string>("SqlQueries:Users");
-            var overTimeWorkReportsQuery = Configuration.GetValue<string>("SqlQueries:OverTimeWorkReports");
+            var overtimeWorkReportsQuery = Configuration.GetValue<string>("SqlQueries:OvertimeWorkReports");
 
             _hostingEnvironment = hostingEnvironment;
 
             _repository = repository;
+
+            _dataLoader = dataLoader;
 
             _files = repository.GetData<Models.DataBase.File>(filesQuery).Result.ToList();
             _dictionary = repository.GetData<Models.DataBase.Dictionary>(dictionaryQuery).Result.ToList();
@@ -52,7 +60,7 @@ namespace WebApplication.Controllers
             _links = repository.GetData<Models.DataBase.Link>(linksQuery).Result.ToList();
             _projects = repository.GetData<Models.DataBase.Project>(projectsQuery).Result.ToList();
             _users = repository.GetData<Models.DataBase.User>(usersQuery).Result.ToList();
-            _overTimeWorkReports = repository.GetData<Models.DataBase.OverTimeWorkReport>(overTimeWorkReportsQuery).Result.ToList();
+            _overtimeWorkReports = repository.GetData<Models.DataBase.OvertimeWorkReport>(overtimeWorkReportsQuery).Result.ToList();
 
             _service = service;
         }
@@ -111,65 +119,13 @@ namespace WebApplication.Controllers
             return File(path, "application/octet-stream", fileName);
         }
 
-        public IActionResult Reports()
+        public async Task<IActionResult> OvertimeWorkReports()
         {
-            var overTimeWOrkReports = new List<ViewModelOverTimeWork>();
-
-            var _overTimeWorkReports = new List<Models.DataBase.OverTimeWorkReport> { new Models.DataBase.OverTimeWorkReport { Name = "Admin", LoadDtm = DateTime.Now, OverTimeHour = 12 } };
-
-            foreach (var reportsUser in _overTimeWorkReports.GroupBy(r => r.Name))
-            {
-                var report = new ViewModelOverTimeWork();
-
-                report.Name = reportsUser.Key;
-
-                foreach (var reportUser in reportsUser
-                    .Where(r => r.LoadDtm.Month == DateTime.Now.Month))
-                {
-                    if (reportUser.OverTimeHour >= 0)
-                        report.OverTime += reportUser.OverTimeHour;
-                    else if (reportUser.OverTimeHour < 0)
-                        report.TimeOff += reportUser.OverTimeHour;
-                }
-
-                foreach (var reportUser in reportsUser
-                    .Where(r => r.LoadDtm.Month == DateTime.Now.AddMonths(-1).Month))
-                {
-                    if (reportUser.OverTimeHour >= 0)
-                        report.LastOverTime += reportUser.OverTimeHour;
-                    else if (reportUser.OverTimeHour < 0)
-                        report.LastTimeOff += reportUser.OverTimeHour;
-                }
-
-                overTimeWOrkReports.Add(report);
-            }
-
-            ViewBag.OverTimeWorkReports = overTimeWOrkReports;
-
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Reports(Models.DataBase.OverTimeWorkReport reports)
-        {
-            return View();
-        }
-
-        public IActionResult OvertimeWorkReports()
-        {
-            //Временное для тестирования.
-            var _overTimeWorkReports = new List<Models.DataBase.OverTimeWorkReport>
-            {
-                new Models.DataBase.OverTimeWorkReport
-                {
-                    Name = "Admin",
-                    LoadDtm = DateTime.Now,
-                    OverTimeHour = 12
-                }
-            };
+            var data = await _dataLoader.GetDataAsync(_repository);
+            var overTimeWorkReports = data.OvertimeWorkReports ?? new List<OvertimeWorkReport>();
 
             var service = _service as Service;
-            var reports = service.ParseToOvertimeReport(_overTimeWorkReports);
+            var reports = service.ParseToOvertimeReport(overTimeWorkReports);
 
             ViewBag.OverTimeWorkReports = reports;
 
@@ -177,35 +133,35 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public IActionResult OvertimeWorkReports(ViewModelOverTimeWorkReport report)
+        public async Task<IActionResult> OvertimeWorkReports(ViewModelOverTimeWorkReport report)
         {
-            Console.BackgroundColor = ConsoleColor.Red;
-            Console.WriteLine($"{report.Name} {report.Id} {report.Time}");
-            Console.ResetColor();
+            var machineName = _service.GetMachineName(Request.HttpContext.Connection.RemoteIpAddress.ToString());
+            var currentUser = _users.Where(usr => usr.MachineName == machineName.ToString()).FirstOrDefault();
 
-            int time = report.Time;
             if (report.Id == 2)
-            {
-                time = time * -1;
-            }
+                report.Time = report.Time * -1;
 
-            var _overTimeWorkReports = new List<Models.DataBase.OverTimeWorkReport>
+            var newReports = new List<OvertimeWorkReport>
             {
-                new Models.DataBase.OverTimeWorkReport
+                new OvertimeWorkReport
                 {
-                    Name = report.Name,
+                    Name = currentUser.Name,
+                    UserName = currentUser.MachineName,
+                    Description = report.Description,
                     LoadDtm = DateTime.Now,
-                    OverTimeHour = time
+                    OvertimeHour =report.Time
                 }
             };
 
+            var data = await _dataLoader.GetDataAsync(_repository);
 
-            var service = _service as Service;
-            var reports = service.ParseToOvertimeReport(_overTimeWorkReports);
+            var queries = data.GetQueries(Configuration);
 
-            ViewBag.OverTimeWorkReports = reports;
+            var query = queries.Where(q => q.Name == "OverTimeWorkReportsInsert").FirstOrDefault().Query;
 
-            return View();
+            _repository.SetData(query, newReports);
+
+            return RedirectToAction(nameof(OvertimeWorkReports));
         }
     }
 }

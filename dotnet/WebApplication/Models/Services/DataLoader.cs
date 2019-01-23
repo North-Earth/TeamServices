@@ -10,7 +10,7 @@ namespace WebApplication.Models.Services
         #region Fields
 
         private readonly IConfiguration _configuration;
-        private readonly IRepository _repository;
+        private IRepository _repository;
 
         private readonly Data _data = new Data();
 
@@ -27,36 +27,47 @@ namespace WebApplication.Models.Services
 
         #region Methods
 
-        public async Task<T> GetDataAsync<T>() where T : class
+        public async Task<Data> GetDataAsync()
         {
             await LoadDataAsync();
-            return _data as T;
+            return _data;
+        }
+
+        public async Task<Data> GetDataAsync(IRepository repository)
+        {
+            _repository = repository;
+
+            await LoadDataAsync();
+            return _data;
         }
 
         public async Task LoadDataAsync()
         {
             var queries = _data.GetQueries(_configuration);
 
-            _data.files = _repository.GetData<Models.DataBase.File>(queries.Where(q
+            /*
+             * TODO: проверка на NULL!!!
+             */
+            _data.Files = _repository.GetData<Models.DataBase.File>(queries.Where(q
                 => q.Name == "Files").FirstOrDefault().Query).Result.ToList();
 
-            _data.dictionary = _repository.GetData<DataBase.Dictionary>(queries.Where(q
-                => q.Name == "Dictionary").FirstOrDefault().Query).Result.ToList();
+            _data.Dictionary = (await _repository.GetData<DataBase.Dictionary>(queries.Where(q
+                => q.Name == "Dictionary").FirstOrDefault().Query)).ToList();
 
-            _data.quotes = _repository.GetData<DataBase.Quote>(queries.Where(q
-                => q.Name == "Quotes").FirstOrDefault().Query).Result.ToList();
+            _data.Quotes = (await _repository.GetData<DataBase.Quote>(queries.Where(q
+                => q.Name == "Quotes").FirstOrDefault().Query)).ToList();
 
-            _data.links = _repository.GetData<DataBase.Link>(queries.Where(q
-                => q.Name == "Links").FirstOrDefault().Query).Result.ToList();
+            _data.Links = (await _repository.GetData<DataBase.Link>(queries.Where(q
+                => q.Name == "Links").FirstOrDefault().Query)).ToList();
 
-            _data.projects = _repository.GetData<DataBase.Project>(queries.Where(q
-                => q.Name == "Projects").FirstOrDefault().Query).Result.ToList();
+            _data.Projects = (await _repository.GetData<DataBase.Project>(queries.Where(q
+                => q.Name == "Projects").FirstOrDefault().Query)).ToList();
 
-            _data.users = _repository.GetData<DataBase.User>(queries.Where(q
-                => q.Name == "Users").FirstOrDefault().Query).Result.ToList();
+            _data.Users = (await _repository.GetData<DataBase.User>(queries.Where(q
+                => q.Name == "Users").FirstOrDefault().Query)).ToList();
 
-            _data.overTimeWorkReports = _repository.GetData<DataBase.OverTimeWorkReport>(queries.Where(q
-                => q.Name == "OverTimeWorkReports").FirstOrDefault().Query).Result.ToList();
+            _data.OvertimeWorkReports = (await _repository.GetData<DataBase.OvertimeWorkReport>(queries.Where(q
+                => q.Name == "OverTimeWorkReports").FirstOrDefault().Query)).ToList();
         }
 
         #endregion

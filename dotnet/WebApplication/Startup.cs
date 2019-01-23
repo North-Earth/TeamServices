@@ -39,6 +39,7 @@ namespace WebApplication
             services.AddScoped<IService, Service>();
             /* Подключаем репозиторий для выгрузки данных из БД */
             services.AddTransient<IRepository, Repository>(provider => new Repository(connectionString));
+            services.AddTransient<IDataLoader, DataLoader>(loader => new DataLoader(Configuration));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

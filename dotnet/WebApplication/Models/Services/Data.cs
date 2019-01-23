@@ -8,13 +8,13 @@ namespace WebApplication.Models.Services
     {
         #region Fields
 
-        public List<DataBase.File> files { get; set; }
-        public List<DataBase.Dictionary> dictionary { get; set; }
-        public List<DataBase.Quote> quotes { get; set; }
-        public List<DataBase.Link> links { get; set; }
-        public List<DataBase.Project> projects { get; set; }
-        public List<DataBase.User> users { get; set; }
-        public List<DataBase.OverTimeWorkReport> overTimeWorkReports { get; set; }
+        public List<File> Files { get; set; }
+        public List<Dictionary> Dictionary { get; set; }
+        public List<Quote> Quotes { get; set; }
+        public List<Link> Links { get; set; }
+        public List<Project> Projects { get; set; }
+        public List<User> Users { get; set; }
+        public List<OvertimeWorkReport> OvertimeWorkReports { get; set; }
 
         #endregion
 
