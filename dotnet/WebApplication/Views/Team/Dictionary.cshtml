@@ -8,119 +8,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    @*<meta charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>*@
-
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <link rel="stylesheet" href="~/css/validation.css" />
 </head>
 <body>
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Командный справочник</h1>
+        <p class="lead">
+            Справочник с описанием источников командных проектов.
+        </p>
+        <button id="btnAddingShow" class="btn btn-outline-primary">Добавить новую запись</button>
+    </div>
 
-    <div class="container mt-3">
-        <h1>Командный справочник</h1>
-        <p>Описание...</p>
-        <button class="btn btn-primary openCreate">Добавить новую запись</button>
-
-        <hr />
-
-        <div class="collapse collapseCreate">
-            <div class="card shadow">
-                <div class="row" style="margin: 10px">
-                    <div class="col-12">
-                        <h3>Добавить новую запись:</h3>
-
-                        <form asp-action="Dictionary">
-                            <div asp-validation-summary="All" class="text-danger"></div>
-                            <div class="form-group">
-                                <input asp-for="Name" type="text" class="form-control" placeholder="Наименование">
-                            </div>
-                            <div class="form-group">
-                                <input asp-for="Description" type="text" class="form-control" placeholder="Описание">
-                            </div>
-                            <div class="form-group">
-                                <input asp-for="SqlExpression" type="text" class="form-control" placeholder="SQL выражение">
-                            </div>
-                            <hr />
-                            <div class="form-group text-right">
-                                <input type="submit" value="Добавить в справочник" class="btn btn-success" />
-                                <button type="button" class="btn btn-danger btnHideCreate">Отмена</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+    <div id="collapseAdding" class="collapse">
+        <div class="card shadow">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal text-center text-truncate">Добавить новую запись</h4>
             </div>
-            <br />
-        </div>
-
-        <div class="collapse collapseChanges">
-            <div class="card shadow">
-                <div class="row" style="margin: 10px">
-                    <div class="col-12">
-                        <h3>Изменить существующую запись:</h3>
-                        <h6>ID:0</h6>
-                        <input type="text" class="form-control" placeholder="Наименование" id="usr">
-                        <br />
-                        <input type="text" class="form-control" placeholder="Описание" id="usr">
-                        <br />
-                        <input type="text" class="form-control" placeholder="SQL выражение" id="usr">
-                        <hr />
-                        <div class="text-right">
-                            <div class="row">
-                                <div class="col-8">
-                                    <h6 class="text-left" style="color:orangered">
-                                        <strong>Данная функция находится в разработке и она может работать некорректно.</strong>
-                                    </h6>
-                                </div>
-                                <div class="col-4">
-                                    <button type="button" class="btn btn-primary">Сохранить</button>
-                                    <button type="button" class="btn btn-danger btnHideChanges">Отмена</button>
-                                </div>
+            <div class="container" style="margin-top:15px">
+                <form asp-action="Dictionary" asp-controller="Team">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Наименование" asp-for="Name">
+                                <input type="text" class="form-control" placeholder="Описание" asp-for="Description">
+                                <input type="text" class="form-control" placeholder="SQL выражение" asp-for="SqlExpression">
+                            </div>
+                            <br />
+                            <div class="form-group text-right">
+                                <input type="submit" value="Добавить в справочник" class="btn btn-outline-primary" />
+                                <button id="btnAddingClose" type="button" class="btn btn-danger">Отмена</button>
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
-            <br />
         </div>
-
-        <input class="form-control shadow" id="dictionarySearch" type="text" placeholder="Search...">
-        <br>
-        <div class="shadow">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th class="text-center">#</th>
-                        <th>Наименование</th>
-                        <th>Описание</th>
-                        <th>SQL выражение</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="dictionary">
-                    @foreach (var item in dictionary as List<Dictionary>)
-                    {
-                        <tr>
-                            <td class="text-center">@item.Id</td>
-                            <td>@item.Name</td>
-                            <td>@item.Description</td>
-                            <td>@item.SqlExpression</td>
-                            <td>
-                                <button type="button" class="btn btn-primary btn-block btnShowChanges">Изменить</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        <p style="margin-bottom: 50px">Note that we start the search in tbody, to prevent filtering the table headers.</p>
+        <br />
     </div>
+
+
+    <div id="collapseChanging" class="collapse">
+        <div class="card shadow">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal text-center text-truncate">Изменить запись</h4>
+            </div>
+            <div class="container" style="margin-top:15px">
+                <form asp-action="Dictionary" asp-controller="Team">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="text-center">
+                                <strong class="text-center text-danger">Данная функция находится в разработке, есть вероятность некорректной работы и непредвиденных последствий.</strong>
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text">ID: null</label>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Наименование" asp-for="Name">
+                                <input type="text" class="form-control" placeholder="Описание" asp-for="Description">
+                                <input type="text" class="form-control" placeholder="SQL выражение" asp-for="SqlExpression">
+                            </div>
+                            <br />
+                            <div class="form-group text-right">
+                                <input type="submit" value="Добавить в справочник" class="btn btn-outline-primary" />
+                                <button id="btnChangingClose" type="button" class="btn btn-danger">Отмена</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <br />
+    </div>
+
+    <input class="form-control shadow" id="dictionarySearch" type="text" placeholder="Search..." />
+
+    <br />
+
+    <div class="shadow" style="margin-bottom: 50px">
+        <table class="table table-bordered text-center table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Наименование</th>
+                    <th scope="col">Описание</th>
+                    <th scope="col">SQL выражение</th>
+                </tr>
+            </thead>
+            <tbody id="dictionary">
+                @foreach (var item in dictionary as List<Dictionary>)
+                {
+                    <tr>
+                        <td scope="row">@item.Id</td>
+                        <td scope="row">@item.Name</td>
+                        <td scope="row">@item.Description</td>
+                        <td scope="row">@item.SqlExpression</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
 
     <script>
 
@@ -132,26 +128,26 @@
                 });
             });
 
-            $(".btnToggleChanges").click(function () {
-                $(".collapseChanges").collapse('toggle');
+            $(".table-hover").dblclick(function () {
+                $("#collapseChanging").collapse('show');
+                $("#collapseAdding").collapse('hide');
+                $("#btnAddingShow").show();
+                //TODO: передача данных.
             });
 
-            $(".btnShowChanges").click(function () {
-                $(".collapseChanges").collapse('show');
-                $(".collapseCreate").collapse('hide');
+            $("#btnChangingClose").click(function () {
+                $("#collapseChanging").collapse('hide');
             });
 
-            $(".btnHideChanges").click(function () {
-                $(".collapseChanges").collapse('hide');
+            $("#btnAddingShow").click(function () {
+                $("#collapseAdding").collapse('show');
+                $("#collapseChanging").collapse('hide');
+                $("#btnAddingShow").hide();
             });
 
-            $(".openCreate").click(function () {
-                $(".collapseCreate").collapse('show');
-                $(".collapseChanges").collapse('hide');
-            });
-
-            $(".btnHideCreate").click(function () {
-                $(".collapseCreate").collapse('hide');
+            $("#btnAddingClose").click(function () {
+                $("#collapseAdding").collapse('hide');
+                $("#btnAddingShow").show();
             });
         });
 
