@@ -119,7 +119,7 @@ namespace WebApplication.Controllers
             return File(path, "application/octet-stream", fileName);
         }
 
-        public async Task<IActionResult> OvertimeWorkReports()
+        public async Task<IActionResult> WorkReports()
         {
             var data = await _dataLoader.GetDataAsync(_repository);
             var overTimeWorkReports = data.OvertimeWorkReports ?? new List<OvertimeWorkReport>();
@@ -133,7 +133,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> OvertimeWorkReports(ViewModelOverTimeWorkReport report)
+        public async Task<IActionResult> WorkReports(ViewModelOverTimeWorkReport report)
         {
             var machineName = _service.GetMachineName(Request.HttpContext.Connection.RemoteIpAddress.ToString());
             var currentUser = _users.Where(usr => usr.MachineName == machineName.ToString()).FirstOrDefault();
@@ -161,7 +161,7 @@ namespace WebApplication.Controllers
 
             _repository.SetData(query, newReports);
 
-            return RedirectToAction(nameof(OvertimeWorkReports));
+            return RedirectToAction(nameof(WorkReports));
         }
     }
 }
