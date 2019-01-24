@@ -7,7 +7,8 @@ GO
 CREATE VIEW TeamServices.vOverTimeWorkReport
 AS
 SELECT
-	 owr.Name	
+	 owr.Name
+	,owr.Description	
 	,owr.UserName
 	,owr.OverTimeHour
 	,owr.LoadDtm

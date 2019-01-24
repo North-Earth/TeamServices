@@ -26,26 +26,45 @@ namespace WebApplication.Models.Services
 
             foreach (var reportsUser in overTimeWorkReports.GroupBy(r => r.Name))
             {
-                var report = new ViewModelOverTimeWork();
+                var overtime = reportsUser
+                    .Where(r => r.OvertimeHour > 0);
 
-                report.Name = reportsUser.Key;
+                var unworkedTime = reportsUser
+                    .Where(r => r.OvertimeHour < 0);
+
+                var overtimeReason = overtime
+                    .Where(r => r.LoadDtm == overtime
+                    .Max(time => time.LoadDtm))
+                    .FirstOrDefault().Description ?? "-";
+
+                var unworkedTimeReason = unworkedTime
+                    .Where(r => r.LoadDtm == unworkedTime
+                    .Max(time => time.LoadDtm))
+                    .FirstOrDefault().Description ?? "-";
+
+                var report = new ViewModelOverTimeWork
+                {
+                    Name = reportsUser.Key,
+                    OvertimeReason = overtimeReason,
+                    UnworkedTimeReason = unworkedTimeReason
+                };
 
                 foreach (var reportUser in reportsUser
-                    .Where(r => r.LoadDtm.Month == DateTime.Now.Month))
+                    .Where(r => r.LoadDtm.Year == DateTime.Now.Year && r.LoadDtm.Month == DateTime.Now.Month))
                 {
                     if (reportUser.OvertimeHour >= 0)
-                        report.OverTime += reportUser.OvertimeHour;
+                        report.Overtime += reportUser.OvertimeHour;
                     else if (reportUser.OvertimeHour < 0)
-                        report.TimeOff += reportUser.OvertimeHour;
+                        report.UnworkedTime += reportUser.OvertimeHour;
                 }
 
                 foreach (var reportUser in reportsUser
-                    .Where(r => r.LoadDtm.Month == DateTime.Now.AddMonths(-1).Month))
+                    .Where(r => r.LoadDtm.Year == DateTime.Now.Year && r.LoadDtm.Month == DateTime.Now.AddMonths(-1).Month))
                 {
                     if (reportUser.OvertimeHour >= 0)
-                        report.LastOverTime += reportUser.OvertimeHour;
+                        report.OvertimeLast += reportUser.OvertimeHour;
                     else if (reportUser.OvertimeHour < 0)
-                        report.LastTimeOff += reportUser.OvertimeHour;
+                        report.UnworkedTimeLast += reportUser.OvertimeHour;
                 }
 
                 reports.Add(report);

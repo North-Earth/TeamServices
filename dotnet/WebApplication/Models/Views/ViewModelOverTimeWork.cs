@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace WebApplication.Models.Views
+﻿namespace WebApplication.Models.Views
 {
     public class ViewModelOverTimeWork
     {
         public string Name { get; set; }
 
-        public int OverTime { get; set; }
+        public string OvertimeReason { get; set; }
 
-        public int TimeOff { get; set; }
+        public string UnworkedTimeReason { get; set; }
 
-        public int LastOverTime { get; set; }
+        public int Overtime { get; set; }
 
-        public int LastTimeOff { get; set; }
+        public int UnworkedTime { get; set; }
+
+        public int OvertimeLast { get; set; }
+
+        public int UnworkedTimeLast { get; set; }
     }
 }

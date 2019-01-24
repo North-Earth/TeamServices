@@ -3,7 +3,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-
+    <link rel="stylesheet" href="~/css/validation.css" /> 
 </head>
 <body>
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
@@ -11,16 +11,17 @@
         <p class="lead">
             Отчёт переработок и отработок.
         </p>
-        <button id="btnShowReport" class="btn btn-outline-primary">Добавить новую запись</button>
+        <button id="btnReportShow" class="btn btn-outline-primary">Добавить новую запись</button>
     </div>
 
-    <div class="collapse">
+    <div id="collapseReport" class="collapse">
         <div class="card shadow">
             <div class="card-header">
                 <h4 class="my-0 font-weight-normal text-center text-truncate">Добавить новую запись</h4>
             </div>
             <div class="container" style="margin-top:15px">
                 <form asp-action="OvertimeWorkReports" asp-controller="Team">
+                    <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="row">
                         <div class="col-12">
                             <div class="input-group">
@@ -29,6 +30,7 @@
                                     <option value="1" selected>Переработка</option>
                                     <option value="2">Недоработка</option>
                                 </select>
+                                <input type="date" class="form-control" placeholder="Дата" asp-for="Date" />
                                 <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="form-control" placeholder="Кол-во" asp-for="Time">
                                 <div class="input-group-append">
                                     <label class="input-group-text">Часов</label>
@@ -37,7 +39,7 @@
                             <br />
                             <div class="form-group text-right">
                                 <input type="submit" value="Добавить в справочник" class="btn btn-outline-primary" />
-                                <button type="button" class="btn btn-danger btnHideCreate">Отмена</button>
+                                <button id="btnReportClose" type="button" class="btn btn-danger btnHideCreate">Отмена</button>
                             </div>
                         </div>
                     </div>
@@ -46,14 +48,14 @@
         </div>
     </div><br />
 
-    <div class="shadow">
-        <table class="table table-bordered text-center">
-            <thead>
+    <div class="shadow" style="margin-bottom: 50px">
+        <table class="table table-bordered text-center table-hover">
+            <thead class="thead-light">
                 <tr>
-                    <th>Пользователь</th>
-                    <th>Текущий месяц</th>
-                    <th>Прошлый месяц</th>
-                    <th>Всего</th>
+                    <th scope="col">Пользователь</th>
+                    <th scope="col">Последняя причина</th>
+                    <th scope="col">Текущий месяц</th>
+                    <th scope="col">Прошлый месяц</th>
                 </tr>
             </thead>
             <tbody id="dictionary">
@@ -61,26 +63,34 @@
                     foreach (var report in @ViewBag.OverTimeWorkReports)
                     {
                         <tr>
-                            <td>@report.Name</td>
-                            <td class="text-center">
+                            <td scope="row">@report.Name</td>
+                            <td scope="row">
                                 <text class="text-primary">
-                                    @report.OverTime
+                                    @report.OvertimeReason
                                 </text>
                                 <text> / </text>
                                 <text class="text-danger">
-                                    @report.TimeOff
+                                    @report.UnworkedTimeReason
                                 </text>
                             </td>
-                            <td class="text-center">
+                            <td scope="row">
                                 <text class="text-primary">
-                                    @report.LastOverTime
+                                    @report.Overtime
                                 </text>
                                 <text> / </text>
                                 <text class="text-danger">
-                                    @report.LastTimeOff
+                                    @report.UnworkedTime
                                 </text>
                             </td>
-                            <td></td>
+                            <td scope="row">
+                                <text class="text-primary">
+                                    @report.OvertimeLast
+                                </text>
+                                <text> / </text>
+                                <text class="text-danger">
+                                    @report.UnworkedTimeLast
+                                </text>
+                            </td>
                         </tr>
                     }
                 }
@@ -88,16 +98,22 @@
         </table>
     </div>
 
-    <p style="margin-bottom: 50px">Note that we start the search in tbody, to prevent filtering the table headers.</p>
-
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
     <script>
         $(document).ready(function () {
-            $("#btnShowReport").click(function () {
-                $(".collapse").collapse('show');
-                $("#btnShowReport").hide();
+            $("#btnReportShow").click(function () {
+                $("#collapseReport").collapse('show');
+                $("#btnReportShow").hide();
+            });
+            $("#btnReportClose").click(function () {
+                $("#collapseReport").collapse('hide');
+                $("#btnReportShow").show();
             });
         })
     </script>
