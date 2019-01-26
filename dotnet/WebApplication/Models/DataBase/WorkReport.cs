@@ -2,7 +2,7 @@
 
 namespace WebApplication.Models.DataBase
 {
-    public class OvertimeWorkReport
+    public class WorkReport
     {
         public string Name { get; set; }
 
@@ -10,7 +10,7 @@ namespace WebApplication.Models.DataBase
 
         public string UserName { get; set; }
 
-        public int OvertimeHour { get; set; }
+        public int TimeHour { get; set; }
 
         public DateTime LoadDtm { get; set; }
     }

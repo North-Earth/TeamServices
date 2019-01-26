@@ -29,7 +29,7 @@ namespace WebApplication.Controllers
         private readonly List<Models.DataBase.Link> _links;
         private readonly List<Models.DataBase.Project> _projects;
         private readonly List<Models.DataBase.User> _users;
-        private readonly List<Models.DataBase.OvertimeWorkReport> _overtimeWorkReports;
+        private readonly List<Models.DataBase.WorkReport> _overtimeWorkReports;
 
         private readonly User currentUser;
 
@@ -60,7 +60,7 @@ namespace WebApplication.Controllers
             _links = repository.GetData<Models.DataBase.Link>(linksQuery).Result.ToList();
             _projects = repository.GetData<Models.DataBase.Project>(projectsQuery).Result.ToList();
             _users = repository.GetData<Models.DataBase.User>(usersQuery).Result.ToList();
-            _overtimeWorkReports = repository.GetData<Models.DataBase.OvertimeWorkReport>(overtimeWorkReportsQuery).Result.ToList();
+            _overtimeWorkReports = repository.GetData<Models.DataBase.WorkReport>(overtimeWorkReportsQuery).Result.ToList();
 
             _service = service;
         }
@@ -122,7 +122,7 @@ namespace WebApplication.Controllers
         public async Task<IActionResult> WorkReports()
         {
             var data = await _dataLoader.GetDataAsync(_repository);
-            var overTimeWorkReports = data.OvertimeWorkReports ?? new List<OvertimeWorkReport>();
+            var overTimeWorkReports = data.OvertimeWorkReports ?? new List<WorkReport>();
 
             var service = _service as Service;
             var reports = service.ParseToOvertimeReport(overTimeWorkReports);
@@ -141,9 +141,9 @@ namespace WebApplication.Controllers
             if (report.Id == 2)
                 report.Time = report.Time * -1;
 
-            var newReports = new List<OvertimeWorkReport>
+            var newReports = new List<WorkReport>
             {
-                new OvertimeWorkReport
+                new WorkReport
                 {
                     Name = currentUser.Name,
                     UserName = currentUser.MachineName,

@@ -66,7 +66,7 @@ namespace WebApplication.Models.Services
             _data.Users = (await _repository.GetData<DataBase.User>(queries.Where(q
                 => q.Name == "Users").FirstOrDefault().Query)).ToList();
 
-            _data.OvertimeWorkReports = (await _repository.GetData<DataBase.OvertimeWorkReport>(queries.Where(q
+            _data.OvertimeWorkReports = (await _repository.GetData<DataBase.WorkReport>(queries.Where(q
                 => q.Name == "OverTimeWorkReports").FirstOrDefault().Query)).ToList();
         }
 

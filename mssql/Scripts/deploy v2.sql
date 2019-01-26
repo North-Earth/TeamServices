@@ -197,6 +197,7 @@ VALUES
     ,'https://metanit.com/'
     ,'fa fa-tasks'
 )
+GO
 
 /*** Справочник отработок и переработок команды ***/
 
@@ -212,7 +213,7 @@ CREATE TABLE TeamServices.WorkReport
     ,LoadDtm        DATETIME2(3)  NOT NULL
 )
 
-DROP TABLE IF EXISTS TeamServices.WorkReportView
+DROP VIEW IF EXISTS TeamServices.WorkReportView
 GO
 
 CREATE VIEW TeamServices.WorkReportView
@@ -224,6 +225,7 @@ SELECT
     ,rpt.TimeHour
     ,rpt.LoadDtm
 FROM TeamServices.WorkReport AS rpt
+GO
 
 /*** Справочник командных проектов ***/
 
@@ -253,13 +255,12 @@ SELECT
     ,prj.Name
     ,prj.Description
     ,prj.LogoPath
-FROM TeamServices.ProjectsView AS prj
+FROM TeamServices.Projects AS prj
 GO
 
 INSERT INTO TeamServices.Projects
 (
-     prj.Id
-    ,prj.Name
+     prj.Name
     ,prj.Description
     ,prj.LogoPath
 )
@@ -274,6 +275,7 @@ VALUES
     ,'Тестовый проект'
     ,'prjLogo3.jpg'
 )
+GO
 
 /*** Забавные цитаты членов команды ***/
 
@@ -296,21 +298,25 @@ DROP VIEW IF EXISTS TeamServices.QuotesView
 GO
 
 CREATE VIEW TeamServices.QuotesView
-(
-     id
-    ,text
-    ,author
-)
+AS
+SELECT
+     qts.id
+    ,qts.text
+    ,qts.author
+FROM TeamServices.Quotes AS qts
+GO
 
 INSERT INTO TeamServices.QuotesView
 (
      text
     ,author
 )
-,(
+VALUES
+(
      'TRUNACATE коронный, DROP TABLE похоронный'
     ,'Кукушкин Алексей Александрович'
 )
+GO
 
 /*** Информация о персонале ***/
 
@@ -344,6 +350,7 @@ SELECT
     ,stf.Birthday
     ,stf.IpAddress
 FROM TeamServices.Staff AS stf
+GO
 
 INSERT INTO TeamServices.Staff
 (
@@ -361,3 +368,4 @@ VALUES
     ,'1998-02-27'
     ,'192.168.1.93'
 )
+GO

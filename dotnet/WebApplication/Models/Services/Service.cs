@@ -20,7 +20,7 @@ namespace WebApplication.Models.Services
         }
 
         public List<ViewModelOverTimeWork> ParseToOvertimeReport
-            (List<OvertimeWorkReport> overTimeWorkReports)
+            (List<WorkReport> overTimeWorkReports)
         {
             var reports = new List<ViewModelOverTimeWork>();
 

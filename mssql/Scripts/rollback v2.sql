@@ -19,7 +19,7 @@ GO
 
 DROP TABLE IF EXISTS TeamServices.WorkReport
 GO
-DROP TABLE IF EXISTS TeamServices.WorkReportView
+DROP VIEW IF EXISTS TeamServices.WorkReportView
 GO
 
 DROP TABLE IF EXISTS TeamServices.Projects
