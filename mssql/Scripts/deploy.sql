@@ -1,4 +1,4 @@
-USE Development
+USE <<SERVERNAME>>
 GO
 
 /*** Схема для объектов командных сервисов ***/
@@ -12,6 +12,7 @@ GO
 /*** Таблица с информацией о статических файлах ***/
 
 DROP TABLE IF EXISTS TeamServices.Files
+GO
 
 CREATE TABLE TeamServices.Files
 (
@@ -24,6 +25,7 @@ CREATE TABLE TeamServices.Files
 	    Id ASC
     )
 )
+GO
 
 INSERT INTO TeamServices.Files
 (
@@ -39,7 +41,7 @@ VALUES
 ),
 (
      'Неоплачиваемый отпуск'
-    ,'Заявление на неоплачиваемый отпуск'
+    ,'Заявление на неоплачиваемый отпуск.'
     ,'Шаблон ежегодный оплачиваемый отпуск.docx'
 ),
 (
@@ -47,26 +49,26 @@ VALUES
     ,'Заявление на ежегодный отпуск с сохранением заработной платы.'
     ,'Шаблон неоплачиваемый отпуск.docx'
 )
+GO
 
 /***  Таблица с информацией о пользователях ***/
 
-DROP TABLE IF EXISTS TeamServices.Users
+DROP TABLE IF EXISTS TeamServices.Staff
 
-CREATE TABLE TeamServices.Users
+CREATE TABLE TeamServices.Staff
 (
      Id              INTEGER IDENTITY(1,1) NOT NULL
     ,MachineName     NVARCHAR(256)         NOT NULL
     ,Name            NVARCHAR(256)         NOT NULL
     ,Birthday        DATE                  NOT NULL
     ,IpAddress       NVARCHAR(16)          NOT NULL
-    --,HardwareAddress NVARCHAR(32)              NULL
     ,CONSTRAINT PkUsers PRIMARY KEY CLUSTERED 
     (
 	    Id ASC
     )
 )
 
-INSERT INTO TeamServices.Users
+INSERT INTO TeamServices.Staff
 (
      MachineName
     ,Name
@@ -75,7 +77,7 @@ INSERT INTO TeamServices.Users
 )
 VALUES
 (
-     'EARTH'
+     'Earth'
     ,'Кукушкин Алексей Александрович'
     ,'1998-02-27'
     ,'192.168.1.179'

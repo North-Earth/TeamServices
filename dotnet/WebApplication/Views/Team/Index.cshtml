@@ -6,165 +6,182 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="~/css/Style.css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">@*Шрифт*@
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Tangerine">@*Шрифт*/@
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>*@
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <div>
-        <div class="row" style="margin-bottom:50px">
-            <div class="col-sm-12 col-lg-8">
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Командный инструментарий</h1>
+        <p class="lead">
+            Команда Функциональные Блоки Развития ДУТ
+        </p>
 
-                <div class="w3-card-4 w3-center" style="width:100%">
+        <div class="spinner-grow text-primary"></div>
+        <div class="spinner-grow text-primary"></div>
+        <div class="spinner-grow text-primary"></div>
+        <br />
+    </div>
+
+    <div class="row" style="margin-bottom:50px">
+        <div class="col-sm-12 col-lg-8">
+
+            @*<div class="w3-card-4 w3-center" style="width:100%">
                     <img src="~/img/newYearBackground.jpg" alt="New Year 2019" style="width:100%">
                     <div class="w3-container w3-center">
                         <h1 class="w3-xxxlarge" style="font-family: 'Tangerine', serif;">Happy New Year!</h1>
                     </div>
                 </div>
+                    <br />
+            *@
 
-                <br />
-
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h3 class="">Полезные ссылки</h3>
-                        <hr />
-                        <div class="text-center">
-                            <button type="button" class="btn btn-link">Google</button>
-                            <button type="button" class="btn btn-link">Google Translate</button>
-                        </div><br />
-
-                        <div class="container text-center">
-                            @{
-                                List<Link> links = ViewBag.Links;
-                                var generalLinks = links.Where(lnk => lnk.Id == 0);
-
-                                foreach (var link in generalLinks)
-                                {
-                                    <a href="@link.Url" type="button" class="btn btn-link">@link.Name</a>
-                                }
-                            }
-                        </div>
-                    </div>
-                </div>
-
-                <br />
-
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card shadow">
-                            <div class="card-body">
-                                <h3>Наши проекты</h3>
-                            </div>
-                        </div>
-                        <br />
-                    </div>
-                    @{
-                        List<Project> projects = ViewBag.Projects;
-
-                        foreach (var project in projects)
-                        {
-                            <div class="col-sm-12 col-lg-6">
-                                <div class="card shadow">
-                                    <img class="card-img-top" src="~/img/Projects/@project.LogoPath" alt="@project.Name" style="width:100%">
-                                    <div class="card-body">
-                                        <h4 class="card-title">@project.Name</h4>
-                                        <p class="card-text">@project.Description</p>
-                                        <button type="button" class="btn btn-link">Link</button>
-                                        <button type="button" class="btn btn-link">Link</button>
-                                        <br />
-                                        <a href="#" class="btn btn-primary">See Profile</a>
-                                    </div>
-                                </div>
-                                <br />
-                            </div>
-                        }
-                    }
-                </div>
-                <br />
-            </div>
-
-            <div class="col-sm-12 col-lg-4">
-                <div class="alert alert-primary alert-dismissible shadow">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <h5>Нужна квартира?</h5>
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <h3 class="">Полезные ссылки</h3>
                     <hr />
-                    <p class="text-center">Я продаю только то, что купил бы сам!</p>
-                </div>
+                    <div class="container h3">
+                        <a href="https://www.google.com/" type="button" class="btn btn-link"><i class="fab fa-google"></i> Google</a>
+                        <a href="https://translate.google.com/" type="button" class="btn btn-link"><i class="fas fa-language"></i> Google Translate</a>
+                        <a href="https://github.com" type="button" class="btn btn-link"><i class="fab fa-github"></i> GitHub</a>
+                    </div>
 
-                <div class="card text-center shadow">
-                    <div class="card-body">
-                        <h5 title="Author" data-toggle="popover"
-                            data-placement="bottom" data-trigger="hover"
-                            data-content=@ViewBag.Quote.Author>
-                            @ViewBag.Quote.Text
-                        </h5>
+                    <div class="container">
+                        @{
+                            List<Link> links = ViewBag.Links;
+                            var generalLinks = links.Where(lnk => lnk.Id == 0);
+
+                            foreach (var link in generalLinks)
+                            {
+                                <a href="@link.Url" type="button" class="btn btn-link">@link.Name</a>
+                            }
+                        }
                     </div>
                 </div>
-
-                <br />
-
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h5>Информация о Вас</h5>
-                        <hr />
-                        <h6>IP: @ViewData["IP"]</h6>
-                        <h6>Имя компьютера: @ViewData["MachineName"]</h6>
-                        <h6>Пользователь: @ViewData["User"]</h6>
-                    </div>
-                </div>
-
-                <br />
-
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h5>Ближайшие дни рождения</h5>
-                        <hr />
-                        <h6>В разработке.</h6>
-                    </div>
-                </div>
-
-                <br />
-
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h5>Ближайшие отпуска</h5>
-                        <hr />
-                        <h6>В разработке.</h6>
-                    </div>
-                </div>
-
-                <br />
-
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h5>Последние блиты</h5>
-                        <hr />
-                        <div class="media border p-3">
-                            <img src="~/img/Users/admin.png" alt="Admin" class="mr-3 mt-3 rounded-circle text-center" style="width:60px;">
-                            <div class="media-body">
-                                <h6>Кукушкин Алексей Александрович <small><i>Posted on December 27, 2018</i></small></h6>
-                                <p> My Firs Post 🐦</p>
-                            </div>
-                        </div>
-                        <br />
-                        <button class="btn btn-outline-primary btn-block"
-                                data-toggle="popover" data-placement="top"
-                                title="Popover Header"
-                                data-content="Some content inside the popover">
-                            More...
-                        </button>
-                    </div>
-                </div>
-
-                <script>
-                    $(document).ready(function () {
-                        $('[data-toggle="popover"]').popover();
-                    });
-                </script>
             </div>
+
+            <br />
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-body text-center">
+                            <h3>Наши проекты</h3>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+                @{
+                    List<Project> projects = ViewBag.Projects;
+
+                    foreach (var project in projects)
+                    {
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="card shadow">
+                                <img class="card-img-top" src="~/img/Projects/@project.LogoPath" alt="@project.Name" style="width:100%">
+                                <div class="card-body text-center">
+                                    <h4 class="card-title">@project.Name</h4>
+                                    <p class="card-text">@project.Description</p>
+                                    <button class="btn btn-outline-primary"><i class="fab fa-gitlab"></i> Git-Lab</button>
+                                    <button class="btn btn-outline-primary"><i class="fab fa-confluence"></i> Confluence</button>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                    }
+                }
+            </div>
+            <br />
+        </div>
+
+        <div class="col-sm-12 col-lg-4">
+            <div class="alert alert-primary alert-dismissible shadow">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h5>Нужна квартира?</h5>
+                <hr />
+                <p class="text-center">Я продаю только то, что купил бы сам!</p>
+            </div>
+
+            <div class="card text-center shadow">
+                <div class="card-body">
+                    <h5 title="Автор" data-toggle="popover"
+                        data-placement="top" data-trigger="hover"
+                        data-content=@ViewBag.Quote.Author>
+                        @ViewBag.Quote.Text
+                    </h5>
+                </div>
+            </div>
+
+            <br />
+
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5>Информация о Вас</h5>
+                    <hr />
+                    <h6>IP: @ViewData["IP"]</h6>
+                    <h6>Имя компьютера: @ViewData["MachineName"]</h6>
+                    <h6>Пользователь: @ViewData["User"]</h6>
+                </div>
+            </div>
+
+            <br />
+
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5>Ближайшие дни рождения</h5>
+                    <hr />
+                    <h6>В разработке.</h6>
+                </div>
+            </div>
+
+            <br />
+
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5>Ближайшие отпуска</h5>
+                    <hr />
+                    <h6>В разработке.</h6>
+                </div>
+            </div>
+
+            <br />
+
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5>Последние блиты</h5>
+                    <hr />
+                    <div class="media border p-3">
+                        <img src="~/img/Users/admin.png" alt="Admin" class="mr-3 mt-3 rounded-circle text-center" style="width:60px;">
+                        <div class="media-body">
+                            <h6>Кукушкин Алексей Александрович <small><i>Posted on December 27, 2018</i></small></h6>
+                            <p> My Firs Post 🐦</p>
+                        </div>
+                    </div>
+                    <br />
+                    <button class="btn btn-outline-primary btn-block"
+                            data-toggle="popover" data-placement="top"
+                            title="Popover Header"
+                            data-content="Some content inside the popover">
+                        More...
+                    </button>
+                </div>
+            </div>
+
+            <script>
+                $(document).ready(function () {
+                    $('[data-toggle="popover"]').popover();
+                });
+            </script>
         </div>
     </div>
 </body>
