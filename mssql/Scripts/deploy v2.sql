@@ -9,16 +9,17 @@ GO
 CREATE SCHEMA TeamServices
 GO
 
-/*** Таблица командный справочник ***/
+/*** Командный справочник ***/
 
 DROP TABLE IF EXISTS TeamServices.Dictionary
+GO
 
 CREATE TABLE TeamServices.Dictionary
 (
      Id            INTEGER IDENTITY(1,1) NOT NULL
-    ,Name          NVARCHAR(256)         NOT NULL
-    ,Description   NVARCHAR(1024)            NULL
-    ,SqlExpression NVARCHAR(2048)        NOT NULL
+    ,Name          NVARCHAR(64)          NOT NULL
+    ,Description   NVARCHAR(256)             NULL
+    ,SqlExpression NVARCHAR(1024)        NOT NULL
     ,CONSTRAINT PkDictionary PRIMARY KEY CLUSTERED 
     (
         Id ASC
@@ -34,12 +35,40 @@ INSERT INTO TeamServices.Dictionary
 )
 VALUES
 (
-     'Командный справочник'
-    ,'Командный справочник с полезными запросами'
-    ,'SELECT * FROM Development.TeamServices.Dictionary'
+     '[TeamToolkit] Командный справочник'
+    ,'Справочник с описанием источников командных проектов.'
+    ,'SELECT * FROM Production.TeamServices.Dictionary'
 )
-
-/*** Витрина командного справочника ***/
+,(
+     '[TeamToolkit] Командный файловый репозиторий'
+    ,'Справочник с описаинем командных файлов'
+    ,'SELECT * FROM Production.TeamServices.Files'
+)
+,(
+     '[TeamToolkit] Ссылки'
+    ,'Источник с ссылками для инструментария'
+    ,'SELECT * FROM Production.TeamServices.Links'
+)
+,(
+     '[TeamToolkit] Командные отчёты'
+    ,'Спраочник очётов переработок и недоработок членов команды'
+    ,'SELECT * FROM Production.TeamServices.WorkReport'
+)
+,(
+     '[TeamToolkit] Командные проекты'
+    ,'Справочник с проектами команды'
+    ,'SELECT * FROM Production.TeamServices.Projects'
+)
+,(
+     '[TeamToolkit] Цитатник'
+    ,'Забавные цитаты членов команды'
+    ,'SELECT * FROM Production.TeamServices.Quotes'
+)
+,(
+     '[TeamToolkit] Информация о персонале'
+    ,'Содержит в себе подробную информацию о персонале'
+    ,'SELECT * FROM Production.TeamServices.Staff'
+)
 
 DROP VIEW IF EXISTS TeamServices.DictionaryView
 GO
@@ -54,7 +83,7 @@ SELECT
 FROM TeamServices.Dictionary AS dct
 GO
 
-/*** Таблица с информацией о статических файлах ***/
+/*** Справочник файлового репозитория ***/
 
 DROP TABLE IF EXISTS TeamServices.Files
 GO
@@ -63,7 +92,7 @@ CREATE TABLE TeamServices.Files
 (
      Id          INTEGER IDENTITY(1,1)  NOT NULL
     ,Name        NVARCHAR(256)          NOT NULL
-    ,Description NVARCHAR(1024)             NULL
+    ,Description NVARCHAR(256)              NULL
     ,FileName    NVARCHAR(256)          NOT NULL
     ,CONSTRAINT PkFiles PRIMARY KEY CLUSTERED 
     (
@@ -72,31 +101,6 @@ CREATE TABLE TeamServices.Files
 )
 GO
 
-INSERT INTO TeamServices.Files
-(
-     Name
-    ,Description
-    ,FileName
-)
-VALUES
-(
-     'Отсутствие на рабочем месте'
-    ,'Заявление об отсутствии сотрудника на рабочем месте.'
-    ,'Шаблон отсутствие на рабочем месте.docx'
-),
-(
-     'Неоплачиваемый отпуск'
-    ,'Заявление на неоплачиваемый отпуск.'
-    ,'Шаблон ежегодный оплачиваемый отпуск.docx'
-),
-(
-     'Оплачиваемый отпуск'
-    ,'Заявление на ежегодный отпуск с сохранением заработной платы.'
-    ,'Шаблон неоплачиваемый отпуск.docx'
-)
-GO
-
-/*** Витрина с информацией о статических файлах ***/
 DROP VIEW IF EXISTS TeamServices.FilesView
 GO
 
@@ -110,7 +114,31 @@ SELECT
 FROM TeamServices.Files AS fls
 GO
 
-/*** Ссылки проектов ***/
+INSERT INTO TeamServices.Files
+(
+     Name
+    ,Description
+    ,FileName
+)
+VALUES
+(
+     'Отсутствие на рабочем месте'
+    ,'Заявление об отсутствии сотрудника на рабочем месте.'
+    ,'Шаблон отсутствие на рабочем месте.docx'
+)
+,(
+     'Неоплачиваемый отпуск'
+    ,'Заявление на неоплачиваемый отпуск.'
+    ,'Шаблон ежегодный оплачиваемый отпуск.docx'
+)
+,(
+     'Оплачиваемый отпуск'
+    ,'Заявление на ежегодный отпуск с сохранением заработной платы.'
+    ,'Шаблон неоплачиваемый отпуск.docx'
+)
+GO
+
+/*** Справочник с ссылками проектов ***/
 
 DROP TABLE IF EXISTS TeamServices.Links
 GO
@@ -162,22 +190,40 @@ VALUES
     ,'#'
     ,NULL
 )
+,(
+     0
+    ,0
+    ,'Metanit'
+    ,'https://metanit.com/'
+    ,'fa fa-tasks'
+)
 
 /*** Справочник отработок и переработок команды ***/
 
 DROP TABLE IF EXISTS TeamServices.WorkReport
+GO
 
 CREATE TABLE TeamServices.WorkReport
 (
      Name           NVARCHAR(256) NOT NULL
     ,Description    NVARCHAR(256) NOT NULL
-    ,UserName       VARCHAR(128)  NOT NULL
+    ,UserName       VARCHAR (128) NOT NULL
     ,TimeHour       SMALLINT      NOT NULL
     ,LoadDtm        DATETIME2(3)  NOT NULL
 )
 
-/* Витрина Справочник отработок и переработок команды */
---TODO: создать витрину
+DROP TABLE IF EXISTS TeamServices.WorkReportView
+GO
+
+CREATE VIEW TeamServices.WorkReportView
+AS
+SELECT
+     rpt.Name
+    ,rpt.Description
+    ,rpt.UserName
+    ,rpt.TimeHour
+    ,rpt.LoadDtm
+FROM TeamServices.WorkReport AS rpt
 
 /*** Справочник командных проектов ***/
 
@@ -219,14 +265,14 @@ INSERT INTO TeamServices.Projects
 )
 VALUES
 (
-     'TeamToolkit'
+     'Team Toolkit'
     ,'Командный инструментарий'
     ,'prjLogo1.jpg'
 )
 ,(
-     'TeamToolkit'
-    ,'Командный инструментарий'
-    ,'prjLogo1.jpg'
+     'Test Project'
+    ,'Тестовый проект'
+    ,'prjLogo3.jpg'
 )
 
 /*** Забавные цитаты членов команды ***/
@@ -247,6 +293,7 @@ CREATE TABLE TeamServices.Quotes
 GO
 
 DROP VIEW IF EXISTS TeamServices.QuotesView
+GO
 
 CREATE VIEW TeamServices.QuotesView
 (
@@ -265,7 +312,7 @@ INSERT INTO TeamServices.QuotesView
     ,'Кукушкин Алексей Александрович'
 )
 
-/***  Таблица с информацией о персонале ***/
+/*** Информация о персонале ***/
 
 DROP TABLE IF EXISTS TeamServices.Staff
 GO
