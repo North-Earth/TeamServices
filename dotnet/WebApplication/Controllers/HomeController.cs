@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using WebApplication.Models;
-using WebApplication.Models.DataBase;
 using WebApplication.Models.Repositories;
 using WebApplication.Models.Services;
 
@@ -19,21 +17,27 @@ namespace WebApplication.Controllers
         public IService _service { get; }
 
         public IRepository _repository { get; }
-        public List<Models.DataBase.User> _users { get; }
+
+        public IDataLoader _dataLoader { get; }
+
+        public Data _data { get; }
 
         #endregion
 
         #region Constructors
 
-        public HomeController(IConfiguration configuration, IService service, IRepository repository)
+        public HomeController(IConfiguration configuration, IService service,
+            IRepository repository, IDataLoader dataLoader)
         {
             Configuration = configuration;
-            var usersQuery = Configuration.GetValue<string>("SqlQueries:Users");
 
             _service = service;
 
             _repository = repository;
-            _users = repository.GetData<User>(usersQuery).Result.ToList();
+
+            _dataLoader = dataLoader;
+
+            _data = (_service as Service).GetData(loader: _dataLoader, repository: _repository).Result;
         }
 
         #endregion
@@ -42,9 +46,11 @@ namespace WebApplication.Controllers
 
         public IActionResult Index()
         {
+            var staff = _data.Staff;
+
             var ipAddress = Request.HttpContext.Connection.RemoteIpAddress;
             var machineName = _service.GetMachineName(ipAddress.ToString());
-            var currentUser = _users.Where(e => e.MachineName == machineName).FirstOrDefault();
+            var currentUser = staff.Where(e => e.MachineName == machineName).FirstOrDefault();
             ViewData["UserName"] = currentUser?.Name;
             return View();
         }

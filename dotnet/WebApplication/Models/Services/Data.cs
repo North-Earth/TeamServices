@@ -13,7 +13,7 @@ namespace WebApplication.Models.Services
         public List<Quote> Quotes { get; set; }
         public List<Link> Links { get; set; }
         public List<Project> Projects { get; set; }
-        public List<User> Users { get; set; }
+        public List<Staff> Staff { get; set; }
         public List<WorkReport> OvertimeWorkReports { get; set; }
 
         #endregion

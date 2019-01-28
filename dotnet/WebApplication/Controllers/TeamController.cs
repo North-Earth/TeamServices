@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using WebApplication.Models.DataBase;
 using WebApplication.Models.Repositories;
 using WebApplication.Models.Services;
@@ -23,30 +22,14 @@ namespace WebApplication.Controllers
 
         private readonly IDataLoader _dataLoader;
 
-        private readonly List<Models.DataBase.File> _files;
-        private readonly List<Models.DataBase.Dictionary> _dictionary;
-        private readonly List<Models.DataBase.Quote> _quotes;
-        private readonly List<Models.DataBase.Link> _links;
-        private readonly List<Models.DataBase.Project> _projects;
-        private readonly List<Models.DataBase.User> _users;
-        private readonly List<Models.DataBase.WorkReport> _overtimeWorkReports;
-
-        private readonly User currentUser;
-
         private readonly IService _service;
 
-        public TeamController(IConfiguration configuration,
-            IHostingEnvironment hostingEnvironment, IRepository repository, IService service, IDataLoader dataLoader)
+        private readonly Data _data;
+
+        public TeamController(IConfiguration configuration, IHostingEnvironment hostingEnvironment,
+            IRepository repository, IService service, IDataLoader dataLoader)
         {
             Configuration = configuration;
-
-            var filesQuery = Configuration.GetValue<string>("SqlQueries:Files");
-            var dictionaryQuery = Configuration.GetValue<string>("SqlQueries:Dictionary");
-            var quotesQuery = Configuration.GetValue<string>("SqlQueries:Quote");
-            var linksQuery = Configuration.GetValue<string>("SqlQueries:Links");
-            var projectsQuery = Configuration.GetValue<string>("SqlQueries:Projects");
-            var usersQuery = Configuration.GetValue<string>("SqlQueries:Users");
-            var overtimeWorkReportsQuery = Configuration.GetValue<string>("SqlQueries:OvertimeWorkReports");
 
             _hostingEnvironment = hostingEnvironment;
 
@@ -54,35 +37,37 @@ namespace WebApplication.Controllers
 
             _dataLoader = dataLoader;
 
-            _files = repository.GetData<Models.DataBase.File>(filesQuery).Result.ToList();
-            _dictionary = repository.GetData<Models.DataBase.Dictionary>(dictionaryQuery).Result.ToList();
-            _quotes = repository.GetData<Models.DataBase.Quote>(quotesQuery).Result.ToList();
-            _links = repository.GetData<Models.DataBase.Link>(linksQuery).Result.ToList();
-            _projects = repository.GetData<Models.DataBase.Project>(projectsQuery).Result.ToList();
-            _users = repository.GetData<Models.DataBase.User>(usersQuery).Result.ToList();
-            _overtimeWorkReports = repository.GetData<Models.DataBase.WorkReport>(overtimeWorkReportsQuery).Result.ToList();
-
             _service = service;
+
+            _data = (_service as Service)
+                .GetData(loader: _dataLoader, repository: _repository).Result;
         }
 
         public IActionResult Index()
         {
-            var quoteRnd = new Random().Next(_quotes.Count);
+            var quotes = _data.Quotes ?? new List<Quote>();
+            var staff = _data.Staff ?? new List<Staff>();
+            var quoteRnd = new Random().Next(quotes.Count);
 
             ViewData["IP"] = Request.HttpContext.Connection.RemoteIpAddress.ToString();
             ViewData["MachineName"] = _service.GetMachineName(Request.HttpContext.Connection.RemoteIpAddress.ToString());
-            ViewData["User"] = _users.Where(usr => usr.MachineName == ViewData["MachineName"].ToString()).FirstOrDefault()?.Name;
-            Models.DataBase.Quote quote = _quotes[quoteRnd];
+            ViewData["User"] = staff.Where(usr => usr.MachineName == ViewData["MachineName"].ToString()).FirstOrDefault()?.Name;
+
+            Models.DataBase.Quote quote = default;
+
+            if (quotes.Count > 0)
+                quote = quotes[quoteRnd];
+
             ViewBag.Quote = quote;
-            ViewBag.Links = _links;
-            ViewBag.Projects = _projects;
+            ViewBag.Links = _data.Links;
+            ViewBag.Projects = _data.Projects;
 
             return View();
         }
 
         public IActionResult Dictionary()
         {
-            ViewData["Dictionary"] = _dictionary;
+            ViewData["Dictionary"] = _data.Dictionary ?? new List<Models.DataBase.Dictionary>();
 
             return View();
         }
@@ -91,26 +76,33 @@ namespace WebApplication.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Dictionary(Models.DataBase.Dictionary dictionary)
         {
-            var dictionaryInsertQuery = Configuration.GetValue<string>("SqlQueries:DictionaryInsert");
-            ViewData["Dictionary"] = _dictionary;
+            var queries = _data.GetQueries(Configuration);
+            var query = queries.Where(q => q.Name == "DictionaryInsert").FirstOrDefault().Query.ToString();
+
+            var data = new List<Dictionary>
+            {
+                dictionary
+            };
+
+            ViewData["Dictionary"] = _data.Dictionary ?? new List<Dictionary>();
 
             try
             {
-                _repository.SetData(dictionaryInsertQuery
-                    , new List<Models.DataBase.Dictionary> { dictionary });
+                _repository.SetData<Models.DataBase.Dictionary>(query, data);
 
                 return RedirectToAction(nameof(Dictionary));
             }
             catch (Exception ex)
             {
-                return View();
+                return RedirectToAction(nameof(Dictionary));
             }
 
         }
 
         public IActionResult Files()
         {
-            return View(_files);
+            var files = _data.Files ?? new List<Models.DataBase.File>();
+            return View(files);
         }
 
         public VirtualFileResult GetFile(string fileName)
@@ -119,10 +111,9 @@ namespace WebApplication.Controllers
             return File(path, "application/octet-stream", fileName);
         }
 
-        public async Task<IActionResult> WorkReports()
+        public IActionResult WorkReports()
         {
-            var data = await _dataLoader.GetDataAsync(_repository);
-            var overTimeWorkReports = data.OvertimeWorkReports ?? new List<WorkReport>();
+            var overTimeWorkReports = _data.OvertimeWorkReports ?? new List<WorkReport>();
 
             var service = _service as Service;
             var reports = service.ParseToOvertimeReport(overTimeWorkReports);
@@ -133,10 +124,13 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> WorkReports(ViewModelOverTimeWorkReport report)
+        public IActionResult WorkReports(ViewModelOverTimeWorkReport report)
         {
             var machineName = _service.GetMachineName(Request.HttpContext.Connection.RemoteIpAddress.ToString());
-            var currentUser = _users.Where(usr => usr.MachineName == machineName.ToString()).FirstOrDefault();
+            var staff = _data.Staff ?? new List<Staff>();
+            var currentUser = staff
+                .Where(usr => usr.MachineName == machineName.ToString())
+                .FirstOrDefault() ?? new Staff { Name = "Unknown", UserName = "Unknown" };
 
             if (report.Id == 2)
                 report.Time = report.Time * -1;
@@ -146,18 +140,16 @@ namespace WebApplication.Controllers
                 new WorkReport
                 {
                     Name = currentUser.Name,
-                    UserName = currentUser.MachineName,
+                    UserName = currentUser.UserName,
                     Description = report.Description,
                     LoadDtm = DateTime.Now,
-                    OvertimeHour =report.Time
+                    TimeHour = report.Time
                 }
             };
 
-            var data = await _dataLoader.GetDataAsync(_repository);
+            var queries = _data.GetQueries(Configuration);
 
-            var queries = data.GetQueries(Configuration);
-
-            var query = queries.Where(q => q.Name == "OverTimeWorkReportsInsert").FirstOrDefault().Query;
+            var query = queries.Where(q => q.Name == "WorkReportsInsert").FirstOrDefault().Query;
 
             _repository.SetData(query, newReports);
 

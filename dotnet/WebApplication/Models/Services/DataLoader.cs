@@ -45,9 +45,6 @@ namespace WebApplication.Models.Services
         {
             var queries = _data.GetQueries(_configuration);
 
-            /*
-             * TODO: проверка на NULL!!!
-             */
             _data.Files = _repository.GetData<Models.DataBase.File>(queries.Where(q
                 => q.Name == "Files").FirstOrDefault().Query).Result.ToList();
 
@@ -63,11 +60,11 @@ namespace WebApplication.Models.Services
             _data.Projects = (await _repository.GetData<DataBase.Project>(queries.Where(q
                 => q.Name == "Projects").FirstOrDefault().Query)).ToList();
 
-            _data.Users = (await _repository.GetData<DataBase.User>(queries.Where(q
-                => q.Name == "Users").FirstOrDefault().Query)).ToList();
+            _data.Staff = (await _repository.GetData<DataBase.Staff>(queries.Where(q
+                => q.Name == "Staff").FirstOrDefault().Query)).ToList();
 
             _data.OvertimeWorkReports = (await _repository.GetData<DataBase.WorkReport>(queries.Where(q
-                => q.Name == "OverTimeWorkReports").FirstOrDefault().Query)).ToList();
+                => q.Name == "WorkReports").FirstOrDefault().Query)).ToList();
         }
 
         #endregion
