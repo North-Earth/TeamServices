@@ -1,6 +1,6 @@
 ﻿namespace WebApplication.Models.Views
 {
-    public class ViewModelOverTimeWork
+    public class ViewModelWork
     {
         public string Name { get; set; }
 

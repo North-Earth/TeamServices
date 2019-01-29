@@ -14,7 +14,7 @@ namespace WebApplication.Models.Services
         public List<Link> Links { get; set; }
         public List<Project> Projects { get; set; }
         public List<Staff> Staff { get; set; }
-        public List<WorkReport> OvertimeWorkReports { get; set; }
+        public List<WorkReport> WorkReports { get; set; }
 
         #endregion
 

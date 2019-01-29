@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication.Models.Views
 {
-    public class ViewModelOverTimeWorkReport
+    public class ViewModelWorkReport
     {
         [Required(ErrorMessage = "Необходимо заполнить описание причины")]
         [MaxLength(256)]
@@ -19,6 +19,6 @@ namespace WebApplication.Models.Views
         public DateTime Date { get; set; }
 
         [Required(ErrorMessage = "Необходимо заполнить кол-во рабочих часов")]
-        public int Time { get; set; }
+        public int TimeHour { get; set; }
     }
 }

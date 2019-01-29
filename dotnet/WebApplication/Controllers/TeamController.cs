@@ -113,7 +113,7 @@ namespace WebApplication.Controllers
 
         public IActionResult WorkReports()
         {
-            var overTimeWorkReports = _data.OvertimeWorkReports ?? new List<WorkReport>();
+            var overTimeWorkReports = _data.WorkReports ?? new List<WorkReport>();
 
             var service = _service as Service;
             var reports = service.ParseToOvertimeReport(overTimeWorkReports);
@@ -124,7 +124,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public IActionResult WorkReports(ViewModelOverTimeWorkReport report)
+        public IActionResult WorkReports(ViewModelWorkReport report)
         {
             var machineName = _service.GetMachineName(Request.HttpContext.Connection.RemoteIpAddress.ToString());
             var staff = _data.Staff ?? new List<Staff>();
@@ -133,7 +133,7 @@ namespace WebApplication.Controllers
                 .FirstOrDefault() ?? new Staff { Name = "Unknown", UserName = "Unknown" };
 
             if (report.Id == 2)
-                report.Time = report.Time * -1;
+                report.TimeHour = -report.TimeHour;
 
             var newReports = new List<WorkReport>
             {
@@ -142,8 +142,8 @@ namespace WebApplication.Controllers
                     Name = currentUser.Name,
                     UserName = currentUser.UserName,
                     Description = report.Description,
-                    LoadDtm = DateTime.Now,
-                    TimeHour = report.Time
+                    LoadDtm = report.Date,
+                    TimeHour = report.TimeHour
                 }
             };
 
@@ -154,6 +154,12 @@ namespace WebApplication.Controllers
             _repository.SetData(query, newReports);
 
             return RedirectToAction(nameof(WorkReports));
+        }
+
+        public IActionResult WorkReportsHistory()
+        {
+            ViewBag.WorkReports = _data.WorkReports.OrderBy(r => r.LoadDtm);
+            return View();
         }
     }
 }

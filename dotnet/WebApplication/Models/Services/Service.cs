@@ -21,10 +21,10 @@ namespace WebApplication.Models.Services
             return hostName;
         }
 
-        public List<ViewModelOverTimeWork> ParseToOvertimeReport
+        public List<ViewModelWork> ParseToOvertimeReport
             (List<WorkReport> WorkReports)
         {
-            var reports = new List<ViewModelOverTimeWork>();
+            var reports = new List<ViewModelWork>();
 
             foreach (var reportsUser in WorkReports.GroupBy(r => r.Name))
             {
@@ -44,7 +44,7 @@ namespace WebApplication.Models.Services
                     .Max(time => time.LoadDtm))
                     .FirstOrDefault()?.Description ?? "-";
 
-                var report = new ViewModelOverTimeWork
+                var report = new ViewModelWork
                 {
                     Name = reportsUser.Key,
                     OvertimeReason = overtimeReason,
@@ -60,11 +60,13 @@ namespace WebApplication.Models.Services
                         report.UnworkedTime += reportUser.TimeHour;
                 }
 
+                var pastDate = DateTime.Now.AddMonths(-1);
+
                 foreach (var reportUser in reportsUser
-                    .Where(r => r.LoadDtm.Year == DateTime.Now.Year && r.LoadDtm.Month == DateTime.Now.AddMonths(-1).Month))
+                    .Where(r => r.LoadDtm.Year == pastDate.Year
+                        && r.LoadDtm.Month == pastDate.Month))
                 {
-                    if (reportUser.TimeHour
- >= 0)
+                    if (reportUser.TimeHour >= 0)
                         report.OvertimeLast += reportUser.TimeHour;
                     else if (reportUser.TimeHour < 0)
                         report.UnworkedTimeLast += reportUser.TimeHour;

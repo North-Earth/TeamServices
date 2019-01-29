@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "WorkReportsHistory";
+}
+<!doctype html>
+<html lang="en">
+<head>
+
+</head>
+<body>
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Командный детальный отчёт</h1>
+        <p class="lead">
+            Детальный отчёт переработок и отработок.
+        </p>
+    </div>
+
+    <div class="shadow">
+        <table class="table table-bordered text-center table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Пользователь</th>
+                    <th scope="col">Причина</th>
+                    <th scope="col">Рабочие часы</th>
+                    <th scope="col">Дата</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var report in @ViewBag.WorkReports)
+                    {
+                        <tr>
+                            <td scope="row">@report.Name</td>
+                            <td scope="row">@report.Description</td>
+                            <td scope="row">@report.TimeHour</td>
+                            <td scope="row">@report.LoadDtm</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
