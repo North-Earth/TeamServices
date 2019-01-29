@@ -22,6 +22,20 @@ GO
 "DefaultConnection": "Data Source=<<SQL Server>>; Initial Catalog=<<Data Base>>; Integrated Security=False; User ID=<<UserName>>;Password=<<Password>>;"
 ```
 
+Установите название вашей команды:
+>**\TeamServices\dotnet\WebApplication\Views\Home\Index.cshtml**
+```sh
+  <p class="w3-large w3-center">
+      <<TeamName>>
+  </p>
+```
+>**\TeamServices\dotnet\WebApplication\Views\Team\Index.cshtml**
+```sh
+  <p class="lead">
+      <<TeamName>>
+  </p>
+```
+
 ### Инструкция по откату
 
 Выполните скрипт отката источников.
