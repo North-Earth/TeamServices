@@ -31,7 +31,7 @@ namespace WebApplication.Models.Services
 
         public IEnumerable<SqlQuery> GetQueries(IConfiguration configuration)
         {
-            var queries = configuration.GetSection("NewSqlQueries").Get<List<SqlQuery>>();
+            var queries = configuration.GetSection("SqlQueries").Get<List<SqlQuery>>();
             return queries;
         }
 
